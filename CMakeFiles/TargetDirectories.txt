@@ -1,4 +1,0 @@
-/home/jslucena/RPCPrintServer/CMakeFiles/server.dir
-/home/jslucena/RPCPrintServer/CMakeFiles/client.dir
-/home/jslucena/RPCPrintServer/CMakeFiles/edit_cache.dir
-/home/jslucena/RPCPrintServer/CMakeFiles/rebuild_cache.dir
