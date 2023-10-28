@@ -25,6 +25,19 @@ so I ended up implementing alone. Because of this, I will do my best to explain 
 // THIS
 #include "common/ssl_context.h"
 
+void handle_return(std::string ret)
+{
+    if(ret == "-1")
+        std::cout << "Server is NOT running, execute the start command first" << std::endl;
+    else if(ret == "0")
+        std::cout << "Operation Successful" << std::endl;
+    else if(ret == "1")
+        std::cout << "Oops something went wrong" << std::endl;
+    else
+        std::cout << ret << std::endl;
+}
+
+
 int main()
 {
     std::vector<std::string> queue = {""};
@@ -52,15 +65,9 @@ int main()
             std::cin >> filename;
             std::cin >> printer;
             std::cin.clear(); //clear garbage from standard input
-
-
+            
             //this function should be similar to calling server.print(filename,printer) on RMI
             result = client.call("print", filename, printer ).as<std::string>(); 
-            if(result == "-1")
-                std::cout << "Server is NOT running, execute the start command first" << std::endl;
-            else
-                std::cout << "Added file " << filename << " to " << printer << " queue"<< std::endl;
-            
         }
         else if(command == "queue")
         {
@@ -68,13 +75,8 @@ int main()
            std::cin >> printer;
            std::cin.clear(); //clear garbage from standard input
 
-
-           //this function should be similar to calling server.queue()
+           //this function should be similar to calling server.queue(printer) on RMI
            result = client.call("queue",printer ).as<std::string>();
-           if(result == "-1")
-                std::cout << "Server is NOT running, execute the start command first" << std::endl;
-            else
-                std::cout << result << std::endl;
         }
         else if(command == "topqueue")
         {
@@ -82,54 +84,42 @@ int main()
             std::string id;
             std::cin >> printer;
             std::cin >> id;
+            //this function should be similar to calling server.topqueue(printer,id) on RMI
             result = client.call("topqueue",printer,id ).as<std::string>();
-
-            if(result == "0")
-                std::cout << "Changed job " << id << " succesfully"<< std::endl;
-            else if(result == "-1")
-                std::cout << "Server is NOT running, execute the start command first" << std::endl;
-            else
-                 std::cout << "job " << id << " does not exist"<< std::endl;
         }
 
         else if(command == "start")
         {
+            //this function should be similar to calling server.start() on RMI
             result = client.call("start").as<std::string>();
-            std::cout << "Started server" << std::endl;
         }
 
         else if(command == "stop")
         {
+            //this function should be similar to calling server.stop() on RMI
             result = client.call("stop").as<std::string>();
-            std::cout << "Stopped server" << std::endl;
         }
 
         else if(command == "restart")
         {
+            //this function should be similar to calling server.restart() on RMI
             result = client.call("restart").as<std::string>();
-            std::cout << "Restarted server" << std::endl;
         }
 
         else if(command == "status")
         {
             std::string printer;
             std::cin >> printer;
+            //this function should be similar to calling server.status(printer) on RMI
             result = client.call("status",printer ).as<std::string>();
-            if(result == "-1")
-                std::cout << "Server is NOT running, execute the start command first" << std::endl;
-            else
-                std::cout << "printer " << printer << ":" << result << std::endl;
         }
 
         else if(command == "readconfig" )
         {
             std::string parameter;
             std::cin >> parameter;
+            //this function should be similar to calling server.readconfig(parameter) on RMI
             result = client.call("readconfig",parameter ).as<std::string>();
-            if(result == "-1")
-                std::cout << "Server is NOT running, execute the start command first" << std::endl;
-            else
-                std::cout << result << std::endl;
         }
 
         else if(command == "setconfig")
@@ -138,14 +128,12 @@ int main()
             std::string value;
             std::cin >> parameter;
             std::cin >> value;
-            result = client.call("readconfig",parameter, value ).as<std::string>();
-            if(result == "-1")
-                std::cout << "Server is NOT running, execute the start command first" << std::endl;
-            else
-                std::cout << "Parameter set succesfully" << std::endl;
+            //this function should be similar to calling server.setconfig(parameter, value) on RMI
+            result = client.call("setconfig",parameter, value ).as<std::string>();
         }
         else
             std::cout << "unknown command" << std::endl;
+        handle_return(result);
     }
 
 

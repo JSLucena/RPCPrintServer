@@ -36,8 +36,8 @@ Also because of this, we didnt put too much attention on the client interface, i
 int main()
 {
     std::map<std::string, std::vector<std::string>> queueMap; //a dictionary to hold the queue for each printer
-    std::map<std::string, std::string> statusMap;
-    std::map<std::string, std::string> configs;
+    std::map<std::string, std::string> statusMap; //dictionary to hold printer status
+    std::map<std::string, std::string> configs; //dictionary to hold server settings
     int jobID = 0;
     queueMap["p1"];
     queueMap["p2"];
@@ -64,32 +64,31 @@ int main()
                     if(running)
                     {
                         std::cout << "Printing " << filename << " on printer " << printer << std::endl;
-                        std::string formatting = std::to_string(jobID++) + " " + filename + "\n";
-                        queueMap[printer].push_back(formatting);
-                        statusMap[printer] = "PRINTING"
+                        std::string formatting = std::to_string(jobID++) + " " + filename + "\n"; //this is just formatting the string
+                        queueMap[printer].push_back(formatting); //we store it in a vector
+                        statusMap[printer] = "PRINTING"; //and set the printer to printing status
                         return 0; 
                     }
-                    return -1;
+                    return -1; //if the server is not running we return an error code
                     
                 } },
-
                 //sends the queue to the client machine, which prints on the clients CLI.
                 std::pair{"queue", [&]
                 (std::string const &printer)
                 {
                     if(running)
                     {
-                        std::cout << "Fetching queue" << std::endl;
+                        std::cout << "Fetching queue " << printer <<std::endl;
                         std::string buffer = "";
                         for(int i = 0; i < queueMap[printer].size();i++)
-                            buffer+= queueMap[printer][i];
+                            buffer+= queueMap[printer][i]; //just contatenate all jobs
                         return buffer;
                     }
                     std::string buffer = "-1"; 
                     return buffer;
 
                 } },
-
+                //puts job with the requested ID on top of the selected printer
                 std::pair{"topqueue", [&]
                 (std::string const &printer, std::string const &id)
                 {
@@ -97,6 +96,7 @@ int main()
                     {
                         for(int i = 0; i < queueMap[printer].size();i++)
                         {
+                            //to change priority we find the job we need, insert a copy of it on the beginning and delete the old one
                             if(queueMap[printer][i].find(id) != -1)
                             {
                                 queueMap[printer].insert(queueMap[printer].begin(),queueMap[printer][i]);
@@ -111,7 +111,7 @@ int main()
                     return -1;
 
                 } },
-
+                //starts server
                 std::pair{"start", [&]
                 ()
                 {
@@ -120,7 +120,7 @@ int main()
                     return 0;
 
                 } },
-
+                //stops server
                  std::pair{"stop", [&]
                 ()
                 {
@@ -129,7 +129,7 @@ int main()
                     return 0;
 
                 } },
-
+                //restarts server and clears queue for each printer
                 std::pair{"restart", [&]
                 ()
                 {
@@ -137,47 +137,50 @@ int main()
                    
                     std::cout << "Restarting Print Server" << std::endl;
                      for (auto i = queueMap.begin(); i != queueMap.end(); i++)
-                        i->second.clear();
+                        i->second.clear(); //clear job queue for each printer
                     return 0;
 
                 } },
-
+                //returns requested printer status
                 std::pair{"status", [&]
                 (std::string const &printer)
                 {
                     if(running)
                     {
+                        std::cout << "Status from " << printer << " requested" << std::endl;
                         return statusMap[printer];
                     }
-                    return -1;
+                    return std::to_string(-1);
                     
 
                 } },
-
+                //returns requested config parameter value
                 std::pair{"readconfig", [&]
                 (std::string const &parameter)
                 {
                     if(running)
                     {
+                        std::cout << "Config " << parameter << " requested" << std::endl;
                         return configs[parameter];
                     }
-                    return -1;
+                    return std::to_string(-1);
                     
 
                 } },
-
+                //sets config parameter to new value
                 std::pair{"setconfig", [&]
                 (std::string const &parameter, std::string const &value)
                 {
                     if(running)
                     {
+                        std::cout << "Setting " << parameter << " from " << configs[parameter] << " to " << value << std::endl;
                         configs[parameter] = value;
                         return 0;
                     }
                     return -1;
                     
 
-                } },
+                } }
 
             );
 
