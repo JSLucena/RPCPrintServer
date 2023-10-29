@@ -3,7 +3,7 @@
 
 CMakeFiles/client.dir/client.cc.o: client.cc \
   /usr/include/stdc-predef.h \
-  /usr/include/c++/11/iostream \
+  /usr/include/c++/11/cstdlib \
   /usr/include/x86_64-linux-gnu/c++/11/bits/c++config.h \
   /usr/include/x86_64-linux-gnu/c++/11/bits/os_defines.h \
   /usr/include/features.h \
@@ -15,6 +15,45 @@ CMakeFiles/client.dir/client.cc.o: client.cc \
   /usr/include/x86_64-linux-gnu/gnu/stubs.h \
   /usr/include/x86_64-linux-gnu/gnu/stubs-64.h \
   /usr/include/x86_64-linux-gnu/c++/11/bits/cpu_defines.h \
+  /usr/include/stdlib.h \
+  /usr/include/x86_64-linux-gnu/bits/libc-header-start.h \
+  /usr/lib/gcc/x86_64-linux-gnu/11/include/stddef.h \
+  /usr/include/x86_64-linux-gnu/bits/waitflags.h \
+  /usr/include/x86_64-linux-gnu/bits/waitstatus.h \
+  /usr/include/x86_64-linux-gnu/bits/floatn.h \
+  /usr/include/x86_64-linux-gnu/bits/floatn-common.h \
+  /usr/include/x86_64-linux-gnu/bits/types/locale_t.h \
+  /usr/include/x86_64-linux-gnu/bits/types/__locale_t.h \
+  /usr/include/x86_64-linux-gnu/sys/types.h \
+  /usr/include/x86_64-linux-gnu/bits/types.h \
+  /usr/include/x86_64-linux-gnu/bits/typesizes.h \
+  /usr/include/x86_64-linux-gnu/bits/time64.h \
+  /usr/include/x86_64-linux-gnu/bits/types/clock_t.h \
+  /usr/include/x86_64-linux-gnu/bits/types/clockid_t.h \
+  /usr/include/x86_64-linux-gnu/bits/types/time_t.h \
+  /usr/include/x86_64-linux-gnu/bits/types/timer_t.h \
+  /usr/include/x86_64-linux-gnu/bits/stdint-intn.h \
+  /usr/include/endian.h \
+  /usr/include/x86_64-linux-gnu/bits/endian.h \
+  /usr/include/x86_64-linux-gnu/bits/endianness.h \
+  /usr/include/x86_64-linux-gnu/bits/byteswap.h \
+  /usr/include/x86_64-linux-gnu/bits/uintn-identity.h \
+  /usr/include/x86_64-linux-gnu/sys/select.h \
+  /usr/include/x86_64-linux-gnu/bits/select.h \
+  /usr/include/x86_64-linux-gnu/bits/types/sigset_t.h \
+  /usr/include/x86_64-linux-gnu/bits/types/__sigset_t.h \
+  /usr/include/x86_64-linux-gnu/bits/types/struct_timeval.h \
+  /usr/include/x86_64-linux-gnu/bits/types/struct_timespec.h \
+  /usr/include/x86_64-linux-gnu/bits/pthreadtypes.h \
+  /usr/include/x86_64-linux-gnu/bits/thread-shared-types.h \
+  /usr/include/x86_64-linux-gnu/bits/pthreadtypes-arch.h \
+  /usr/include/x86_64-linux-gnu/bits/atomic_wide_counter.h \
+  /usr/include/x86_64-linux-gnu/bits/struct_mutex.h \
+  /usr/include/x86_64-linux-gnu/bits/struct_rwlock.h \
+  /usr/include/alloca.h \
+  /usr/include/x86_64-linux-gnu/bits/stdlib-float.h \
+  /usr/include/c++/11/bits/std_abs.h \
+  /usr/include/c++/11/iostream \
   /usr/include/c++/11/ostream \
   /usr/include/c++/11/ios \
   /usr/include/c++/11/iosfwd \
@@ -23,10 +62,6 @@ CMakeFiles/client.dir/client.cc.o: client.cc \
   /usr/include/c++/11/bits/postypes.h \
   /usr/include/c++/11/cwchar \
   /usr/include/wchar.h \
-  /usr/include/x86_64-linux-gnu/bits/libc-header-start.h \
-  /usr/include/x86_64-linux-gnu/bits/floatn.h \
-  /usr/include/x86_64-linux-gnu/bits/floatn-common.h \
-  /usr/lib/gcc/x86_64-linux-gnu/11/include/stddef.h \
   /usr/lib/gcc/x86_64-linux-gnu/11/include/stdarg.h \
   /usr/include/x86_64-linux-gnu/bits/wchar.h \
   /usr/include/x86_64-linux-gnu/bits/types/wint_t.h \
@@ -34,8 +69,6 @@ CMakeFiles/client.dir/client.cc.o: client.cc \
   /usr/include/x86_64-linux-gnu/bits/types/__mbstate_t.h \
   /usr/include/x86_64-linux-gnu/bits/types/__FILE.h \
   /usr/include/x86_64-linux-gnu/bits/types/FILE.h \
-  /usr/include/x86_64-linux-gnu/bits/types/locale_t.h \
-  /usr/include/x86_64-linux-gnu/bits/types/__locale_t.h \
   /usr/include/c++/11/exception \
   /usr/include/c++/11/bits/exception.h \
   /usr/include/c++/11/bits/exception_ptr.h \
@@ -65,10 +98,6 @@ CMakeFiles/client.dir/client.cc.o: client.cc \
   /usr/include/c++/11/cstdint \
   /usr/lib/gcc/x86_64-linux-gnu/11/include/stdint.h \
   /usr/include/stdint.h \
-  /usr/include/x86_64-linux-gnu/bits/types.h \
-  /usr/include/x86_64-linux-gnu/bits/typesizes.h \
-  /usr/include/x86_64-linux-gnu/bits/time64.h \
-  /usr/include/x86_64-linux-gnu/bits/stdint-intn.h \
   /usr/include/x86_64-linux-gnu/bits/stdint-uintn.h \
   /usr/include/c++/11/bits/localefwd.h \
   /usr/include/x86_64-linux-gnu/c++/11/bits/c++locale.h \
@@ -77,36 +106,21 @@ CMakeFiles/client.dir/client.cc.o: client.cc \
   /usr/include/x86_64-linux-gnu/bits/locale.h \
   /usr/include/c++/11/cctype \
   /usr/include/ctype.h \
-  /usr/include/x86_64-linux-gnu/bits/endian.h \
-  /usr/include/x86_64-linux-gnu/bits/endianness.h \
   /usr/include/c++/11/bits/ios_base.h \
   /usr/include/c++/11/ext/atomicity.h \
   /usr/include/x86_64-linux-gnu/c++/11/bits/gthr.h \
   /usr/include/x86_64-linux-gnu/c++/11/bits/gthr-default.h \
   /usr/include/pthread.h \
   /usr/include/sched.h \
-  /usr/include/x86_64-linux-gnu/bits/types/time_t.h \
-  /usr/include/x86_64-linux-gnu/bits/types/struct_timespec.h \
   /usr/include/x86_64-linux-gnu/bits/sched.h \
   /usr/include/x86_64-linux-gnu/bits/types/struct_sched_param.h \
   /usr/include/x86_64-linux-gnu/bits/cpu-set.h \
   /usr/include/time.h \
   /usr/include/x86_64-linux-gnu/bits/time.h \
   /usr/include/x86_64-linux-gnu/bits/timex.h \
-  /usr/include/x86_64-linux-gnu/bits/types/struct_timeval.h \
-  /usr/include/x86_64-linux-gnu/bits/types/clock_t.h \
   /usr/include/x86_64-linux-gnu/bits/types/struct_tm.h \
-  /usr/include/x86_64-linux-gnu/bits/types/clockid_t.h \
-  /usr/include/x86_64-linux-gnu/bits/types/timer_t.h \
   /usr/include/x86_64-linux-gnu/bits/types/struct_itimerspec.h \
-  /usr/include/x86_64-linux-gnu/bits/pthreadtypes.h \
-  /usr/include/x86_64-linux-gnu/bits/thread-shared-types.h \
-  /usr/include/x86_64-linux-gnu/bits/pthreadtypes-arch.h \
-  /usr/include/x86_64-linux-gnu/bits/atomic_wide_counter.h \
-  /usr/include/x86_64-linux-gnu/bits/struct_mutex.h \
-  /usr/include/x86_64-linux-gnu/bits/struct_rwlock.h \
   /usr/include/x86_64-linux-gnu/bits/setjmp.h \
-  /usr/include/x86_64-linux-gnu/bits/types/__sigset_t.h \
   /usr/include/x86_64-linux-gnu/bits/types/struct___jmp_buf_tag.h \
   /usr/include/x86_64-linux-gnu/bits/pthread_stack_min-dynamic.h \
   /usr/include/x86_64-linux-gnu/c++/11/bits/atomic_word.h \
@@ -127,20 +141,6 @@ CMakeFiles/client.dir/client.cc.o: client.cc \
   /usr/include/c++/11/bits/alloc_traits.h \
   /usr/include/c++/11/bits/stl_construct.h \
   /usr/include/c++/11/ext/string_conversions.h \
-  /usr/include/c++/11/cstdlib \
-  /usr/include/stdlib.h \
-  /usr/include/x86_64-linux-gnu/bits/waitflags.h \
-  /usr/include/x86_64-linux-gnu/bits/waitstatus.h \
-  /usr/include/x86_64-linux-gnu/sys/types.h \
-  /usr/include/endian.h \
-  /usr/include/x86_64-linux-gnu/bits/byteswap.h \
-  /usr/include/x86_64-linux-gnu/bits/uintn-identity.h \
-  /usr/include/x86_64-linux-gnu/sys/select.h \
-  /usr/include/x86_64-linux-gnu/bits/select.h \
-  /usr/include/x86_64-linux-gnu/bits/types/sigset_t.h \
-  /usr/include/alloca.h \
-  /usr/include/x86_64-linux-gnu/bits/stdlib-float.h \
-  /usr/include/c++/11/bits/std_abs.h \
   /usr/include/c++/11/cstdio \
   /usr/include/stdio.h \
   /usr/include/x86_64-linux-gnu/bits/types/__fpos_t.h \
@@ -178,6 +178,11 @@ CMakeFiles/client.dir/client.cc.o: client.cc \
   /usr/include/c++/11/bits/ostream.tcc \
   /usr/include/c++/11/istream \
   /usr/include/c++/11/bits/istream.tcc \
+  /usr/include/c++/11/vector \
+  /usr/include/c++/11/bits/stl_uninitialized.h \
+  /usr/include/c++/11/bits/stl_vector.h \
+  /usr/include/c++/11/bits/stl_bvector.h \
+  /usr/include/c++/11/bits/vector.tcc \
   /home/jslucena/rpclib/include/rpc/client.h \
   /usr/include/c++/11/future \
   /usr/include/c++/11/mutex \
@@ -209,7 +214,6 @@ CMakeFiles/client.dir/client.cc.o: client.cc \
   /usr/include/c++/11/bits/std_function.h \
   /usr/include/c++/11/bits/std_thread.h \
   /usr/include/c++/11/memory \
-  /usr/include/c++/11/bits/stl_uninitialized.h \
   /usr/include/c++/11/bits/stl_tempbuf.h \
   /usr/include/c++/11/bits/stl_raw_storage_iter.h \
   /usr/include/c++/11/bits/align.h \
@@ -405,10 +409,6 @@ CMakeFiles/client.dir/client.cc.o: client.cc \
   /home/jslucena/rpclib/include/rpc/msgpack/zone_decl.hpp \
   /home/jslucena/rpclib/include/rpc/msgpack/v1/zone_decl.hpp \
   /home/jslucena/rpclib/include/rpc/msgpack/v1/detail/cpp11_zone_decl.hpp \
-  /usr/include/c++/11/vector \
-  /usr/include/c++/11/bits/stl_vector.h \
-  /usr/include/c++/11/bits/stl_bvector.h \
-  /usr/include/c++/11/bits/vector.tcc \
   /home/jslucena/rpclib/include/rpc/msgpack/v2/zone_decl.hpp \
   /home/jslucena/rpclib/include/rpc/msgpack/v2/detail/cpp11_zone_decl.hpp \
   /home/jslucena/rpclib/include/rpc/msgpack/v1/zone.hpp \
@@ -1208,12 +1208,6 @@ CMakeFiles/client.dir/client.cc.o: client.cc \
 
 /home/jslucena/rpclib/include/rpc/msgpack/predef/architecture/sparc.h:
 
-/home/jslucena/rpclib/include/rpc/msgpack/preprocessor/tuple.hpp:
-
-/home/jslucena/rpclib/include/rpc/msgpack/predef/architecture/ppc.h:
-
-/home/jslucena/rpclib/include/rpc/msgpack/v1/adaptor/int.hpp:
-
 /usr/include/c++/11/bit:
 
 /home/jslucena/rpclib/include/rpc/msgpack/v2/adaptor/detail/cpp11_define_map_decl.hpp:
@@ -1262,6 +1256,10 @@ CMakeFiles/client.dir/client.cc.o: client.cc \
 
 /home/jslucena/rpclib/include/rpc/client.h:
 
+/usr/include/c++/11/bits/stl_bvector.h:
+
+/usr/include/wchar.h:
+
 /usr/include/c++/11/istream:
 
 /home/jslucena/rpclib/include/rpc/msgpack/predef/architecture/arm.h:
@@ -1305,6 +1303,16 @@ CMakeFiles/client.dir/client.cc.o: client.cc \
 /usr/include/netinet/in.h:
 
 /usr/include/c++/11/bits/concept_check.h:
+
+/home/jslucena/rpclib/include/rpc/msgpack/preprocessor/list/rest_n.hpp:
+
+/home/jslucena/rpclib/include/rpc/msgpack/v1/adaptor/vector.hpp:
+
+/usr/include/c++/11/bits/vector.tcc:
+
+/home/jslucena/rpclib/include/rpc/msgpack/preprocessor/seq/detail/split.hpp:
+
+/usr/include/x86_64-linux-gnu/bits/socket.h:
 
 /home/jslucena/rpclib/include/rpc/msgpack/preprocessor/arithmetic/detail/div_base.hpp:
 
@@ -1368,19 +1376,57 @@ CMakeFiles/client.dir/client.cc.o: client.cc \
 
 /usr/include/x86_64-linux-gnu/bits/types/__fpos_t.h:
 
-/usr/include/x86_64-linux-gnu/bits/stdlib-float.h:
+/home/jslucena/rpclib/include/rpc/msgpack/adaptor/adaptor_base.hpp:
 
-/usr/include/c++/11/limits:
+/usr/include/c++/11/bits/alloc_traits.h:
 
-/home/jslucena/rpclib/include/rpc/msgpack/preprocessor/seq/to_array.hpp:
+/home/jslucena/rpclib/include/rpc/detail/pimpl.h:
 
-/usr/include/alloca.h:
+/usr/include/c++/11/bits/stl_vector.h:
+
+/usr/include/x86_64-linux-gnu/sys/types.h:
+
+/usr/include/c++/11/bits/stl_deque.h:
+
+/usr/include/c++/11/tuple:
+
+/usr/include/c++/11/ext/new_allocator.h:
+
+/usr/include/c++/11/bits/memoryfwd.h:
+
+/usr/include/c++/11/bits/basic_ios.tcc:
+
+/home/jslucena/rpclib/include/rpc/msgpack/preprocessor/seq/filter.hpp:
+
+/usr/include/x86_64-linux-gnu/bits/struct_mutex.h:
+
+/home/jslucena/rpclib/include/rpc/msgpack/predef/compiler/pgi.h:
+
+/usr/include/x86_64-linux-gnu/asm/posix_types_64.h:
+
+/home/jslucena/rpclib/include/rpc/msgpack/preprocessor/seq/push_back.hpp:
+
+/usr/include/c++/11/bits/std_function.h:
+
+/usr/include/c++/11/bits/stringfwd.h:
+
+/usr/include/c++/11/ostream:
+
+/home/jslucena/rpclib/include/rpc/msgpack/v1/adaptor/fixint.hpp:
+
+/usr/include/c++/11/iosfwd:
+
+/home/jslucena/rpclib/include/rpc/msgpack/predef/os/bsd/bsdi.h:
 
 /home/jslucena/rpclib/include/rpc/msgpack/predef/architecture/blackfin.h:
 
 /usr/include/c++/11/atomic:
 
 /home/jslucena/rpclib/include/rpc/msgpack/object_decl.hpp:
+
+/usr/include/c++/11/vector:
+
+/usr/include/c++/11/bits/stl_tempbuf.h:
 
 /usr/include/c++/11/bits/unordered_map.h:
 
@@ -1390,25 +1436,53 @@ CMakeFiles/client.dir/client.cc.o: client.cc \
 
 /usr/include/x86_64-linux-gnu/sys/select.h:
 
-/usr/include/x86_64-linux-gnu/bits/uintn-identity.h:
+/usr/include/x86_64-linux-gnu/bits/stdlib-float.h:
 
-/usr/include/x86_64-linux-gnu/bits/byteswap.h:
+/usr/include/c++/11/bits/refwrap.h:
 
-/usr/include/x86_64-linux-gnu/bits/timex.h:
+/usr/include/c++/11/bits/exception_ptr.h:
 
-/home/jslucena/rpclib/include/rpc/msgpack/v1/adaptor/vector_unsigned_char.hpp:
+/usr/include/c++/11/bits/postypes.h:
 
-/home/jslucena/rpclib/include/rpc/msgpack/adaptor/msgpack_tuple.hpp:
+/usr/include/stdint.h:
 
-/home/jslucena/rpclib/include/rpc/msgpack/v1/cpp_config_decl.hpp:
+/usr/include/c++/11/limits:
+
+/home/jslucena/rpclib/include/rpc/msgpack/preprocessor/seq/to_array.hpp:
+
+/usr/include/alloca.h:
+
+/usr/include/stdlib.h:
+
+/usr/include/x86_64-linux-gnu/bits/atomic_wide_counter.h:
+
+/home/jslucena/rpclib/include/rpc/msgpack/predef/language.h:
+
+/home/jslucena/rpclib/include/rpc/msgpack/preprocessor/comparison.hpp:
+
+/usr/include/x86_64-linux-gnu/bits/stdint-uintn.h:
+
+/usr/include/x86_64-linux-gnu/bits/thread-shared-types.h:
+
+/usr/include/c++/11/bits/std_thread.h:
+
+/usr/include/c++/11/bits/stl_algobase.h:
+
+/home/jslucena/rpclib/include/rpc/msgpack/preprocessor/tuple/detail/is_single_return.hpp:
+
+/home/jslucena/rpclib/include/rpc/msgpack/preprocessor/logical/bool.hpp:
+
+/usr/include/c++/11/bits/exception.h:
+
+/usr/include/c++/11/bits/ostream.tcc:
 
 /home/jslucena/rpclib/include/rpc/msgpack/v1/adaptor/cpp11/shared_ptr.hpp:
 
 /usr/include/x86_64-linux-gnu/bits/waitstatus.h:
 
-/usr/include/stdlib.h:
+/usr/include/x86_64-linux-gnu/bits/pthreadtypes-arch.h:
 
-/home/jslucena/rpclib/include/rpc/msgpack/cpp_config_decl.hpp:
+/usr/include/features-time64.h:
 
 /home/jslucena/rpclib/include/rpc/msgpack/preprocessor/list/transform.hpp:
 
@@ -1422,23 +1496,147 @@ CMakeFiles/client.dir/client.cc.o: client.cc \
 
 /home/jslucena/rpclib/include/rpc/msgpack/predef/os/os400.h:
 
-/usr/include/c++/11/bits/cpp_type_traits.h:
+/usr/include/x86_64-linux-gnu/bits/select.h:
 
-/home/jslucena/rpclib/include/rpc/msgpack/v2/pack_decl.hpp:
+/home/jslucena/rpclib/include/rpc/msgpack/predef/architecture.h:
 
-/home/jslucena/rpclib/include/rpc/msgpack/v1/adaptor/ext_decl.hpp:
+/usr/include/c++/11/bits/cxxabi_init_exception.h:
 
-/usr/include/c++/11/bits/range_access.h:
+/home/jslucena/rpclib/include/rpc/msgpack/preprocessor/seq.hpp:
 
-/usr/include/c++/11/bits/nested_exception.h:
+/usr/lib/gcc/x86_64-linux-gnu/11/include/stdarg.h:
 
-/usr/include/c++/11/bits/istream.tcc:
+/home/jslucena/rpclib/include/rpc/msgpack/predef/architecture/sys390.h:
 
-/home/jslucena/rpclib/include/rpc/msgpack/unpack_define.h:
+client.cc:
 
-/home/jslucena/rpclib/include/rpc/msgpack/preprocessor/variadic/detail/is_single_return.hpp:
+/usr/include/c++/11/bits/unordered_set.h:
 
-/home/jslucena/rpclib/include/rpc/msgpack/predef/compiler/intel.h:
+/home/jslucena/rpclib/include/rpc/msgpack/predef/hardware/simd/x86/versions.h:
+
+/home/jslucena/rpclib/include/rpc/config.h:
+
+/home/jslucena/rpclib/include/rpc/msgpack/preprocessor/tuple/pop_front.hpp:
+
+/usr/lib/gcc/x86_64-linux-gnu/11/include/stdint.h:
+
+/usr/include/x86_64-linux-gnu/gnu/stubs.h:
+
+/usr/include/c++/11/chrono:
+
+/home/jslucena/rpclib/include/rpc/msgpack/v1/pack.hpp:
+
+/usr/include/x86_64-linux-gnu/bits/byteswap.h:
+
+/usr/include/x86_64-linux-gnu/bits/timex.h:
+
+/usr/include/c++/11/bits/std_mutex.h:
+
+/usr/include/c++/11/cstdint:
+
+/usr/include/x86_64-linux-gnu/bits/libc-header-start.h:
+
+/home/jslucena/rpclib/include/rpc/msgpack/predef/compiler/greenhills.h:
+
+/home/jslucena/rpclib/include/rpc/msgpack/adaptor/vector.hpp:
+
+/usr/include/c++/11/bits/stl_set.h:
+
+/usr/include/x86_64-linux-gnu/bits/stdint-intn.h:
+
+/usr/include/c++/11/bits/predefined_ops.h:
+
+/home/jslucena/rpclib/include/rpc/msgpack/preprocessor/list/adt.hpp:
+
+/home/jslucena/rpclib/include/rpc/msgpack/predef/os/cygwin.h:
+
+/home/jslucena/rpclib/include/rpc/msgpack/preprocessor/tuple/insert.hpp:
+
+/usr/include/c++/11/bits/sstream.tcc:
+
+/home/jslucena/rpclib/include/rpc/msgpack/preprocessor/tuple/pop_back.hpp:
+
+/usr/include/x86_64-linux-gnu/bits/types/FILE.h:
+
+/usr/include/x86_64-linux-gnu/bits/waitflags.h:
+
+/home/jslucena/rpclib/include/rpc/msgpack/v1/cpp_config.hpp:
+
+/home/jslucena/rpclib/include/rpc/msgpack/preprocessor/seq/insert.hpp:
+
+/usr/include/c++/11/bits/atomic_base.h:
+
+/usr/include/x86_64-linux-gnu/bits/types/struct_timeval.h:
+
+/usr/include/ctype.h:
+
+/usr/include/c++/11/typeinfo:
+
+/home/jslucena/rpclib/include/rpc/msgpack/predef/library/std/msl.h:
+
+/usr/include/x86_64-linux-gnu/bits/types.h:
+
+/home/jslucena/rpclib/include/rpc/msgpack/vrefbuffer.hpp:
+
+/usr/include/asm-generic/errno.h:
+
+/usr/include/x86_64-linux-gnu/bits/typesizes.h:
+
+/usr/include/x86_64-linux-gnu/bits/setjmp.h:
+
+/usr/include/x86_64-linux-gnu/bits/uintn-identity.h:
+
+/home/jslucena/rpclib/include/rpc/msgpack/v1/meta_decl.hpp:
+
+/usr/include/x86_64-linux-gnu/bits/endian.h:
+
+/home/jslucena/rpclib/include/rpc/msgpack/predef/compiler/hp_acc.h:
+
+/home/jslucena/rpclib/include/rpc/msgpack/preprocessor/iteration.hpp:
+
+/home/jslucena/rpclib/include/rpc/msgpack/preprocessor/variadic/elem.hpp:
+
+/usr/include/x86_64-linux-gnu/bits/time.h:
+
+/home/jslucena/rpclib/include/rpc/msgpack/adaptor/char_ptr.hpp:
+
+/home/jslucena/rpclib/include/rpc/msgpack/v1/adaptor/vector_unsigned_char.hpp:
+
+/home/jslucena/rpclib/include/rpc/msgpack/adaptor/msgpack_tuple.hpp:
+
+/home/jslucena/rpclib/include/rpc/msgpack/v1/cpp_config_decl.hpp:
+
+/usr/include/c++/11/bits/streambuf_iterator.h:
+
+/usr/include/c++/11/clocale:
+
+/home/jslucena/rpclib/include/rpc/rpc_error.h:
+
+/usr/include/c++/11/cwchar:
+
+/usr/include/c++/11/unordered_set:
+
+/home/jslucena/rpclib/include/rpc/msgpack/predef/os/irix.h:
+
+/home/jslucena/rpclib/include/rpc/msgpack/v1/detail/cpp11_zone_decl.hpp:
+
+/home/jslucena/rpclib/include/rpc/msgpack/preprocessor/repetition/enum_binary_params.hpp:
+
+/usr/include/x86_64-linux-gnu/bits/struct_rwlock.h:
+
+/home/jslucena/rpclib/include/rpc/msgpack/v1/adaptor/define.hpp:
+
+/home/jslucena/rpclib/include/rpc/msgpack/predef/architecture/sys370.h:
+
+/home/jslucena/rpclib/include/rpc/msgpack/predef/os/bsd/dragonfly.h:
+
+/usr/include/x86_64-linux-gnu/bits/endianness.h:
+
+/usr/include/c++/11/bits/cxxabi_forced.h:
+
+/usr/include/c++/11/bits/unique_ptr.h:
+
+/usr/include/c++/11/bits/locale_conv.h:
 
 /usr/include/stdc-predef.h:
 
@@ -1462,187 +1660,9 @@ CMakeFiles/client.dir/client.cc.o: client.cc \
 
 /usr/include/c++/11/stdlib.h:
 
-/home/jslucena/rpclib/include/rpc/msgpack/preprocessor/tuple/detail/is_single_return.hpp:
+/home/jslucena/rpclib/include/rpc/msgpack/preprocessor/variadic/detail/is_single_return.hpp:
 
-/home/jslucena/rpclib/include/rpc/msgpack/preprocessor/logical/bool.hpp:
-
-/usr/include/c++/11/bits/exception.h:
-
-/usr/include/x86_64-linux-gnu/bits/libc-header-start.h:
-
-/home/jslucena/rpclib/include/rpc/msgpack/predef/compiler/greenhills.h:
-
-/usr/include/c++/11/clocale:
-
-/usr/include/c++/11/bits/streambuf_iterator.h:
-
-/usr/include/x86_64-linux-gnu/bits/select.h:
-
-/home/jslucena/rpclib/include/rpc/msgpack/predef/architecture.h:
-
-/usr/include/c++/11/bits/cxxabi_init_exception.h:
-
-/usr/include/c++/11/bits/memoryfwd.h:
-
-/home/jslucena/rpclib/include/rpc/msgpack/v2/adaptor/ext_decl.hpp:
-
-/usr/include/byteswap.h:
-
-/home/jslucena/rpclib/include/rpc/msgpack/object.hpp:
-
-/usr/include/x86_64-linux-gnu/bits/types/struct___jmp_buf_tag.h:
-
-/usr/include/x86_64-linux-gnu/bits/types/locale_t.h:
-
-/home/jslucena/rpclib/include/rpc/msgpack/adaptor/float.hpp:
-
-/usr/include/x86_64-linux-gnu/bits/types/mbstate_t.h:
-
-/home/jslucena/rpclib/include/rpc/msgpack.hpp:
-
-/home/jslucena/rpclib/include/rpc/msgpack/sbuffer_decl.hpp:
-
-/usr/include/c++/11/cctype:
-
-/home/jslucena/rpclib/include/rpc/msgpack/v1/adaptor/map.hpp:
-
-/home/jslucena/rpclib/include/rpc/msgpack/preprocessor/seq.hpp:
-
-/usr/lib/gcc/x86_64-linux-gnu/11/include/stdarg.h:
-
-/usr/include/c++/11/unordered_set:
-
-/home/jslucena/rpclib/include/rpc/msgpack/v1/detail/cpp11_zone_decl.hpp:
-
-/home/jslucena/rpclib/include/rpc/msgpack/predef/os/irix.h:
-
-/home/jslucena/rpclib/include/rpc/msgpack/predef/architecture/sys390.h:
-
-client.cc:
-
-/usr/include/c++/11/bits/unordered_set.h:
-
-/home/jslucena/rpclib/include/rpc/msgpack/predef/hardware/simd/x86/versions.h:
-
-/usr/include/c++/11/condition_variable:
-
-/home/jslucena/rpclib/include/rpc/msgpack/v1/sbuffer_decl.hpp:
-
-/usr/include/c++/11/bits/std_mutex.h:
-
-/usr/include/c++/11/cstdint:
-
-/usr/include/x86_64-linux-gnu/bits/waitflags.h:
-
-/home/jslucena/rpclib/include/rpc/msgpack/preprocessor/tuple/pop_back.hpp:
-
-/usr/include/x86_64-linux-gnu/bits/types/FILE.h:
-
-/home/jslucena/rpclib/include/rpc/msgpack/v1/cpp_config.hpp:
-
-/home/jslucena/rpclib/include/rpc/msgpack/preprocessor/seq/insert.hpp:
-
-/usr/include/c++/11/bits/atomic_base.h:
-
-/usr/include/x86_64-linux-gnu/bits/types/struct_timeval.h:
-
-/usr/include/ctype.h:
-
-/usr/include/c++/11/typeinfo:
-
-/home/jslucena/rpclib/include/rpc/msgpack/predef/library/std/msl.h:
-
-/home/jslucena/rpclib/include/rpc/rpc_error.h:
-
-/usr/include/c++/11/cwchar:
-
-/usr/include/c++/11/ostream:
-
-/usr/include/c++/11/bits/std_thread.h:
-
-/usr/include/c++/11/bits/stl_algobase.h:
-
-/usr/include/x86_64-linux-gnu/bits/thread-shared-types.h:
-
-/home/jslucena/rpclib/include/rpc/msgpack/v1/adaptor/fixint.hpp:
-
-/usr/include/c++/11/iosfwd:
-
-/home/jslucena/rpclib/include/rpc/msgpack/predef/os/bsd/bsdi.h:
-
-/usr/include/c++/11/bits/stl_iterator.h:
-
-/home/jslucena/rpclib/include/rpc/msgpack/cpp_config.hpp:
-
-/home/jslucena/rpclib/include/rpc/msgpack/v2/adaptor/nil_decl.hpp:
-
-/home/jslucena/rpclib/include/rpc/msgpack/predef/compiler/edg.h:
-
-/home/jslucena/rpclib/include/rpc/msgpack/preprocessor/array/data.hpp:
-
-/home/jslucena/rpclib/include/rpc/msgpack/adaptor/array_ref_decl.hpp:
-
-/home/jslucena/rpclib/include/rpc/msgpack/preprocessor/tuple/pop_front.hpp:
-
-/usr/lib/gcc/x86_64-linux-gnu/11/include/stdint.h:
-
-/home/jslucena/rpclib/include/rpc/config.h:
-
-/home/jslucena/rpclib/include/rpc/msgpack/adaptor/vector_char.hpp:
-
-/usr/include/c++/11/set:
-
-/home/jslucena/rpclib/include/rpc/msgpack/v1/adaptor/int_decl.hpp:
-
-/usr/include/c++/11/bits/stl_relops.h:
-
-/home/jslucena/rpclib/include/rpc/msgpack/adaptor/deque.hpp:
-
-/usr/include/c++/11/bits/allocator.h:
-
-/usr/include/c++/11/bits/localefwd.h:
-
-/usr/include/c++/11/bits/char_traits.h:
-
-/usr/include/x86_64-linux-gnu/bits/types/wint_t.h:
-
-/home/jslucena/rpclib/include/rpc/msgpack/v2/adaptor/detail/cpp11_define_array_decl.hpp:
-
-/home/jslucena/rpclib/include/rpc/msgpack/preprocessor/tuple/eat.hpp:
-
-/usr/include/c++/11/memory:
-
-/home/jslucena/rpclib/include/rpc/msgpack/preprocessor/seq/for_each_product.hpp:
-
-/usr/include/c++/11/type_traits:
-
-/usr/include/c++/11/bits/stl_deque.h:
-
-/home/jslucena/rpclib/include/rpc/msgpack/preprocessor/punctuation/remove_parens.hpp:
-
-/home/jslucena/rpclib/include/rpc/msgpack/preprocessor/array/to_seq.hpp:
-
-/usr/include/x86_64-linux-gnu/bits/types/__mbstate_t.h:
-
-/usr/include/c++/11/bits/basic_ios.tcc:
-
-/home/jslucena/rpclib/include/rpc/msgpack/preprocessor/seq/filter.hpp:
-
-/usr/include/x86_64-linux-gnu/bits/struct_mutex.h:
-
-/home/jslucena/rpclib/include/rpc/msgpack/predef/compiler/pgi.h:
-
-/usr/include/x86_64-linux-gnu/asm/posix_types_64.h:
-
-/home/jslucena/rpclib/include/rpc/msgpack/preprocessor/seq/push_back.hpp:
-
-/usr/include/c++/11/bits/std_function.h:
-
-/usr/include/c++/11/bits/stringfwd.h:
-
-/home/jslucena/rpclib/include/rpc/msgpack/preprocessor/variadic/to_list.hpp:
-
-/home/jslucena/rpclib/include/rpc/msgpack/predef/architecture/parisc.h:
+/home/jslucena/rpclib/include/rpc/msgpack/predef/compiler/intel.h:
 
 /home/jslucena/rpclib/include/rpc/msgpack/preprocessor/control/expr_if.hpp:
 
@@ -1658,23 +1678,9 @@ client.cc:
 
 /usr/include/x86_64-linux-gnu/c++/11/bits/c++locale.h:
 
-/usr/include/x86_64-linux-gnu/gnu/stubs.h:
-
-/usr/include/c++/11/bits/exception_ptr.h:
-
-/usr/include/c++/11/bits/postypes.h:
-
-/usr/include/c++/11/bits/refwrap.h:
-
 /usr/include/x86_64-linux-gnu/bits/floatn.h:
 
-/home/jslucena/rpclib/include/rpc/msgpack/predef/compiler.h:
-
-/usr/include/wchar.h:
-
-/usr/include/c++/11/bits/stl_tempbuf.h:
-
-/usr/include/c++/11/vector:
+/home/jslucena/rpclib/include/rpc/msgpack/cpp_config_decl.hpp:
 
 /usr/include/asm-generic/sockios.h:
 
@@ -1684,57 +1690,139 @@ client.cc:
 
 /home/jslucena/rpclib/include/rpc/msgpack/v2/object_decl.hpp:
 
-/usr/include/stdint.h:
+/home/jslucena/rpclib/include/rpc/msgpack/adaptor/deque.hpp:
 
-/usr/include/x86_64-linux-gnu/bits/types.h:
+/usr/include/c++/11/bits/allocator.h:
 
-/home/jslucena/rpclib/include/rpc/msgpack/vrefbuffer.hpp:
+/home/jslucena/rpclib/include/rpc/msgpack/v2/adaptor/detail/cpp11_define_array_decl.hpp:
 
-/usr/include/asm-generic/errno.h:
+/home/jslucena/rpclib/include/rpc/msgpack/preprocessor/tuple/eat.hpp:
 
-/usr/include/x86_64-linux-gnu/bits/typesizes.h:
+/usr/include/c++/11/memory:
 
-/home/jslucena/rpclib/include/rpc/msgpack/adaptor/vector.hpp:
+/usr/include/x86_64-linux-gnu/bits/types/locale_t.h:
 
-/usr/include/c++/11/bits/stl_set.h:
+/home/jslucena/rpclib/include/rpc/msgpack/adaptor/float.hpp:
 
-/usr/include/x86_64-linux-gnu/bits/stdint-intn.h:
+/usr/include/x86_64-linux-gnu/bits/types/mbstate_t.h:
 
-/usr/include/c++/11/bits/predefined_ops.h:
+/home/jslucena/rpclib/include/rpc/msgpack.hpp:
 
-/home/jslucena/rpclib/include/rpc/msgpack/preprocessor/list/adt.hpp:
+/home/jslucena/rpclib/include/rpc/msgpack/sbuffer_decl.hpp:
 
-/home/jslucena/rpclib/include/rpc/msgpack/predef/os/cygwin.h:
+/usr/include/c++/11/cctype:
 
-/home/jslucena/rpclib/include/rpc/msgpack/preprocessor/tuple/insert.hpp:
+/home/jslucena/rpclib/include/rpc/msgpack/v1/adaptor/map.hpp:
 
-/usr/include/c++/11/bits/sstream.tcc:
+/home/jslucena/rpclib/include/rpc/msgpack/preprocessor/punctuation/remove_parens.hpp:
 
-/home/jslucena/rpclib/include/rpc/msgpack/preprocessor/comparison.hpp:
+/home/jslucena/rpclib/include/rpc/msgpack/preprocessor/array/to_seq.hpp:
 
-/usr/include/x86_64-linux-gnu/bits/stdint-uintn.h:
+/usr/include/x86_64-linux-gnu/bits/types/__mbstate_t.h:
+
+/home/jslucena/rpclib/include/rpc/msgpack/preprocessor/control/iif.hpp:
+
+/usr/include/x86_64-linux-gnu/bits/types/__FILE.h:
+
+/home/jslucena/rpclib/include/rpc/msgpack/object.hpp:
+
+/usr/include/x86_64-linux-gnu/bits/types/struct___jmp_buf_tag.h:
+
+/usr/include/c++/11/bits/ostream_insert.h:
+
+/home/jslucena/rpclib/include/rpc/msgpack/predef/hardware/simd/x86_amd.h:
+
+/usr/include/c++/11/bits/charconv.h:
+
+/usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:
+
+/home/jslucena/rpclib/include/rpc/msgpack/adaptor/bool.hpp:
+
+/usr/include/x86_64-linux-gnu/bits/types/time_t.h:
+
+/usr/include/c++/11/backward/auto_ptr.h:
+
+/usr/include/x86_64-linux-gnu/asm/bitsperlong.h:
+
+/home/jslucena/rpclib/include/rpc/msgpack/v2/adaptor/define_decl.hpp:
+
+/home/jslucena/rpclib/include/rpc/msgpack/meta.hpp:
+
+/usr/include/c++/11/debug/assertions.h:
+
+/home/jslucena/rpclib/include/rpc/msgpack/preprocessor/slot.hpp:
+
+/usr/include/x86_64-linux-gnu/bits/pthreadtypes.h:
+
+/home/jslucena/rpclib/include/rpc/msgpack/adaptor/vector_char.hpp:
+
+/usr/include/c++/11/set:
+
+/home/jslucena/rpclib/include/rpc/msgpack/v1/adaptor/int_decl.hpp:
+
+/usr/include/c++/11/bits/stl_relops.h:
+
+/home/jslucena/rpclib/include/rpc/msgpack/preprocessor/seq/for_each_product.hpp:
+
+/usr/include/c++/11/type_traits:
+
+/usr/include/c++/11/bits/range_access.h:
+
+/usr/include/c++/11/bits/nested_exception.h:
+
+/usr/include/c++/11/bits/istream.tcc:
+
+/home/jslucena/rpclib/include/rpc/msgpack/unpack_define.h:
+
+/usr/include/c++/11/bits/cpp_type_traits.h:
+
+/usr/include/c++/11/bits/char_traits.h:
+
+/usr/include/x86_64-linux-gnu/bits/types/wint_t.h:
+
+/usr/include/c++/11/bits/localefwd.h:
+
+/home/jslucena/rpclib/include/rpc/msgpack/v2/pack_decl.hpp:
+
+/home/jslucena/rpclib/include/rpc/msgpack/v1/adaptor/ext_decl.hpp:
+
+/usr/include/x86_64-linux-gnu/c++/11/bits/atomic_word.h:
+
+/home/jslucena/rpclib/include/rpc/msgpack/adaptor/int.hpp:
+
+/usr/include/c++/11/ext/concurrence.h:
+
+/home/jslucena/rpclib/include/rpc/msgpack/type.hpp:
+
+/home/jslucena/rpclib/include/rpc/msgpack/v1/adaptor/pair.hpp:
+
+/usr/include/locale.h:
+
+/usr/include/c++/11/condition_variable:
+
+/home/jslucena/rpclib/include/rpc/msgpack/v1/sbuffer_decl.hpp:
+
+/home/jslucena/rpclib/include/rpc/msgpack/predef/library.h:
+
+/usr/include/c++/11/bits/stl_uninitialized.h:
+
+/home/jslucena/rpclib/include/rpc/msgpack/predef/compiler.h:
+
+/usr/include/c++/11/bits/stl_iterator.h:
+
+/home/jslucena/rpclib/include/rpc/msgpack/preprocessor/array/data.hpp:
+
+/home/jslucena/rpclib/include/rpc/msgpack/adaptor/array_ref_decl.hpp:
+
+/home/jslucena/rpclib/include/rpc/msgpack/preprocessor/repetition/enum_params.hpp:
+
+/home/jslucena/rpclib/include/rpc/msgpack/preprocessor/array/insert.hpp:
+
+/usr/include/c++/11/ext/alloc_traits.h:
 
 /usr/include/c++/11/bits/ptr_traits.h:
 
 /usr/include/c++/11/sstream:
-
-/home/jslucena/rpclib/include/rpc/msgpack/v1/meta_decl.hpp:
-
-/home/jslucena/rpclib/include/rpc/msgpack/predef/compiler/hp_acc.h:
-
-/usr/include/x86_64-linux-gnu/bits/endian.h:
-
-/usr/include/c++/11/bits/alloc_traits.h:
-
-/home/jslucena/rpclib/include/rpc/msgpack/predef/os/bsd/dragonfly.h:
-
-/usr/include/x86_64-linux-gnu/bits/endianness.h:
-
-/usr/include/c++/11/bits/cxxabi_forced.h:
-
-/usr/include/c++/11/bits/unique_ptr.h:
-
-/usr/include/c++/11/bits/locale_conv.h:
 
 /home/jslucena/rpclib/include/rpc/msgpack/preprocessor/list/cat.hpp:
 
@@ -1748,55 +1836,31 @@ client.cc:
 
 /home/jslucena/rpclib/include/rpc/msgpack/predef/compiler/sunpro.h:
 
+/usr/include/c++/11/bits/std_abs.h:
+
+/usr/include/c++/11/cstddef:
+
+/usr/include/c++/11/bits/basic_string.h:
+
+/usr/include/x86_64-linux-gnu/gnu/stubs-64.h:
+
+/usr/include/x86_64-linux-gnu/c++/11/bits/c++config.h:
+
 /usr/include/x86_64-linux-gnu/bits/types/struct_timespec.h:
 
 /usr/include/c++/11/bits/list.tcc:
 
 /home/jslucena/rpclib/include/rpc/msgpack/version.hpp:
 
-/home/jslucena/rpclib/include/rpc/msgpack/preprocessor/control/iif.hpp:
-
-/usr/include/x86_64-linux-gnu/bits/types/__FILE.h:
-
 /usr/include/x86_64-linux-gnu/bits/types/sigset_t.h:
 
 /usr/include/x86_64-linux-gnu/asm/posix_types.h:
 
+/usr/include/c++/11/bits/stl_pair.h:
+
+/usr/include/sched.h:
+
 /home/jslucena/rpclib/include/rpc/msgpack/adaptor/carray.hpp:
-
-/usr/include/c++/11/bits/charconv.h:
-
-/usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:
-
-/usr/include/c++/11/cstddef:
-
-/usr/include/c++/11/bits/std_abs.h:
-
-/home/jslucena/rpclib/include/rpc/msgpack/adaptor/bool.hpp:
-
-/home/jslucena/rpclib/include/rpc/msgpack/v2/adaptor/define_decl.hpp:
-
-/home/jslucena/rpclib/include/rpc/msgpack/meta.hpp:
-
-/usr/include/c++/11/debug/assertions.h:
-
-/home/jslucena/rpclib/include/rpc/msgpack/preprocessor/slot.hpp:
-
-/usr/include/x86_64-linux-gnu/bits/pthreadtypes.h:
-
-/usr/include/x86_64-linux-gnu/bits/types/time_t.h:
-
-/usr/include/c++/11/backward/auto_ptr.h:
-
-/usr/include/x86_64-linux-gnu/asm/bitsperlong.h:
-
-/usr/include/x86_64-linux-gnu/c++/11/bits/atomic_word.h:
-
-/home/jslucena/rpclib/include/rpc/msgpack/adaptor/int.hpp:
-
-/usr/include/c++/11/chrono:
-
-/home/jslucena/rpclib/include/rpc/msgpack/v1/pack.hpp:
 
 /usr/include/c++/11/iostream:
 
@@ -1806,35 +1870,13 @@ client.cc:
 
 /usr/include/x86_64-linux-gnu/bits/types/struct_sched_param.h:
 
-/home/jslucena/rpclib/include/rpc/msgpack/predef/language.h:
+/usr/include/c++/11/backward/binders.h:
 
-/usr/include/x86_64-linux-gnu/bits/atomic_wide_counter.h:
+/usr/include/x86_64-linux-gnu/bits/types/struct_osockaddr.h:
 
-/home/jslucena/rpclib/include/rpc/msgpack/preprocessor/repetition/enum_params.hpp:
+/usr/include/pthread.h:
 
-/home/jslucena/rpclib/include/rpc/msgpack/preprocessor/array/insert.hpp:
-
-/usr/include/c++/11/ext/alloc_traits.h:
-
-/usr/include/c++/11/ext/concurrence.h:
-
-/home/jslucena/rpclib/include/rpc/msgpack/type.hpp:
-
-/home/jslucena/rpclib/include/rpc/msgpack/v1/adaptor/pair.hpp:
-
-/usr/include/locale.h:
-
-/usr/include/sched.h:
-
-/usr/include/c++/11/bits/stl_pair.h:
-
-/home/jslucena/rpclib/include/rpc/msgpack/preprocessor/iteration.hpp:
-
-/home/jslucena/rpclib/include/rpc/msgpack/preprocessor/variadic/elem.hpp:
-
-/usr/include/x86_64-linux-gnu/bits/time.h:
-
-/home/jslucena/rpclib/include/rpc/msgpack/adaptor/char_ptr.hpp:
+/usr/include/time.h:
 
 /home/jslucena/rpclib/include/rpc/msgpack/preprocessor/seq/fold_left.hpp:
 
@@ -1860,20 +1902,6 @@ client.cc:
 
 /home/jslucena/rpclib/include/rpc/msgpack/predef/os/solaris.h:
 
-/home/jslucena/rpclib/include/rpc/msgpack/predef/architecture/pyramid.h:
-
-/home/jslucena/rpclib/include/rpc/msgpack/predef/os/bsd/open.h:
-
-/home/jslucena/rpclib/include/rpc/msgpack/preprocessor/repetition/enum_binary_params.hpp:
-
-/usr/include/x86_64-linux-gnu/bits/struct_rwlock.h:
-
-/home/jslucena/rpclib/include/rpc/msgpack/v1/adaptor/define.hpp:
-
-/home/jslucena/rpclib/include/rpc/msgpack/predef/architecture/sys370.h:
-
-/usr/include/x86_64-linux-gnu/bits/setjmp.h:
-
 /usr/include/x86_64-linux-gnu/asm/errno.h:
 
 /home/jslucena/rpclib/include/rpc/msgpack/v1/parse_return.hpp:
@@ -1894,35 +1922,29 @@ client.cc:
 
 /usr/include/c++/11/string:
 
-/usr/include/c++/11/tuple:
+/home/jslucena/rpclib/include/rpc/msgpack/v2/adaptor/ext_decl.hpp:
 
-/usr/include/c++/11/ext/new_allocator.h:
+/usr/include/byteswap.h:
 
-/usr/include/c++/11/bits/ostream_insert.h:
+/home/jslucena/rpclib/include/rpc/msgpack/preprocessor/variadic/to_list.hpp:
 
-/home/jslucena/rpclib/include/rpc/msgpack/predef/hardware/simd/x86_amd.h:
+/home/jslucena/rpclib/include/rpc/msgpack/predef/architecture/parisc.h:
 
-/usr/include/pthread.h:
+/home/jslucena/rpclib/include/rpc/msgpack/preprocessor/tuple.hpp:
 
-/usr/include/time.h:
+/home/jslucena/rpclib/include/rpc/msgpack/predef/architecture/ppc.h:
 
-/usr/include/c++/11/backward/binders.h:
+/home/jslucena/rpclib/include/rpc/msgpack/v1/adaptor/int.hpp:
 
-/usr/include/x86_64-linux-gnu/bits/types/struct_osockaddr.h:
+/home/jslucena/rpclib/include/rpc/msgpack/cpp_config.hpp:
 
-/usr/include/c++/11/bits/ostream.tcc:
+/home/jslucena/rpclib/include/rpc/msgpack/predef/compiler/edg.h:
 
-/usr/include/features-time64.h:
+/home/jslucena/rpclib/include/rpc/msgpack/v2/adaptor/nil_decl.hpp:
 
-/usr/include/x86_64-linux-gnu/bits/pthreadtypes-arch.h:
+/home/jslucena/rpclib/include/rpc/msgpack/predef/architecture/pyramid.h:
 
-/usr/include/x86_64-linux-gnu/gnu/stubs-64.h:
-
-/usr/include/x86_64-linux-gnu/c++/11/bits/c++config.h:
-
-/usr/include/c++/11/bits/basic_string.h:
-
-/home/jslucena/rpclib/include/rpc/msgpack/adaptor/adaptor_base.hpp:
+/home/jslucena/rpclib/include/rpc/msgpack/predef/os/bsd/open.h:
 
 /usr/include/c++/11/bits/stl_construct.h:
 
@@ -2012,20 +2034,6 @@ client.cc:
 
 /home/jslucena/rpclib/include/rpc/msgpack/predef/compiler/watcom.h:
 
-/usr/include/c++/11/bits/stl_uninitialized.h:
-
-/home/jslucena/rpclib/include/rpc/msgpack/predef/library.h:
-
-/home/jslucena/rpclib/include/rpc/msgpack/preprocessor/seq/detail/split.hpp:
-
-/usr/include/x86_64-linux-gnu/bits/socket.h:
-
-/home/jslucena/rpclib/include/rpc/msgpack/preprocessor/list/rest_n.hpp:
-
-/home/jslucena/rpclib/include/rpc/msgpack/v1/adaptor/vector.hpp:
-
-/usr/include/c++/11/bits/vector.tcc:
-
 /home/jslucena/rpclib/include/rpc/msgpack/predef/detail/_cassert.h:
 
 /home/jslucena/rpclib/include/rpc/msgpack/predef/library/c/gnu.h:
@@ -2060,9 +2068,9 @@ client.cc:
 
 /home/jslucena/rpclib/include/rpc/msgpack/predef/library/std/stlport.h:
 
-/usr/include/x86_64-linux-gnu/bits/floatn-common.h:
-
 /home/jslucena/rpclib/include/rpc/msgpack/zone_decl.hpp:
+
+/usr/include/x86_64-linux-gnu/bits/floatn-common.h:
 
 /home/jslucena/rpclib/include/rpc/msgpack/predef/os/aix.h:
 
@@ -2086,9 +2094,9 @@ client.cc:
 
 /home/jslucena/rpclib/include/rpc/msgpack/adaptor/pair.hpp:
 
-/home/jslucena/rpclib/include/rpc/msgpack/predef/detail/test.h:
-
 /usr/include/x86_64-linux-gnu/c++/11/bits/cpu_defines.h:
+
+/home/jslucena/rpclib/include/rpc/msgpack/predef/detail/test.h:
 
 /home/jslucena/rpclib/include/rpc/msgpack/predef/os/hpux.h:
 
@@ -2253,14 +2261,6 @@ client.cc:
 /usr/include/x86_64-linux-gnu/bits/uio_lim.h:
 
 /home/jslucena/rpclib/include/rpc/msgpack/zone.hpp:
-
-/home/jslucena/rpclib/include/rpc/detail/pimpl.h:
-
-/usr/include/x86_64-linux-gnu/sys/types.h:
-
-/usr/include/c++/11/bits/stl_vector.h:
-
-/usr/include/c++/11/bits/stl_bvector.h:
 
 /home/jslucena/rpclib/include/rpc/msgpack/object_fwd.hpp:
 

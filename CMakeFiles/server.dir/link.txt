@@ -1,1 +1,1 @@
-/usr/bin/c++ -rdynamic CMakeFiles/server.dir/server.cc.o -o server  /home/jslucena/rpclib/librpc.a 
+/usr/bin/c++ -rdynamic CMakeFiles/server.dir/server.cc.o -o server  /home/jslucena/rpclib/librpc.a -lcrypto++ 

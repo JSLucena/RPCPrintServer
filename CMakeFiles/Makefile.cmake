@@ -24,6 +24,7 @@ set(CMAKE_MAKEFILE_DEPENDS
   "/home/jslucena/.local/lib/python3.10/site-packages/cmake/data/share/cmake-3.25/Modules/Compiler/GNU.cmake"
   "/home/jslucena/.local/lib/python3.10/site-packages/cmake/data/share/cmake-3.25/Modules/FindPackageHandleStandardArgs.cmake"
   "/home/jslucena/.local/lib/python3.10/site-packages/cmake/data/share/cmake-3.25/Modules/FindPackageMessage.cmake"
+  "/home/jslucena/.local/lib/python3.10/site-packages/cmake/data/share/cmake-3.25/Modules/FindPkgConfig.cmake"
   "/home/jslucena/.local/lib/python3.10/site-packages/cmake/data/share/cmake-3.25/Modules/FindThreads.cmake"
   "/home/jslucena/.local/lib/python3.10/site-packages/cmake/data/share/cmake-3.25/Modules/Internal/CheckSourceCompiles.cmake"
   "/home/jslucena/.local/lib/python3.10/site-packages/cmake/data/share/cmake-3.25/Modules/Platform/Linux-GNU-C.cmake"

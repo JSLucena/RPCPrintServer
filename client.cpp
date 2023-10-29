@@ -1,13 +1,29 @@
+
+/*===================================================================
+Authentication Lab.
+Lecture : 02239 - Data Security Fall 23
+Author : Joaquim Siqueira Lucena
+Last Updated : 2023-10-26
+
+For this project we are using a simple RPC implementation. It should function a bit similar to the Java RMI, I believe.
+
+I decided to do it in C++ because I have no experience using Java, and my group members were not being very cooperative about the project
+so I ended up implementing alone. Because of this, I will do my best to explain my code in a way that makes it easy to understand.
+
+===================================================================
+*/
+
+
+
+// STD
 #include <cstdlib>
 #include <iostream>
 #include <vector>
-#include<string>
+// NANORPC
+#include <nanorpc/https/easy.h>
 
-
-
-#include "rpc/client.h"
-#include "rpc/rpc_error.h"
-#define PORT 55555
+// THIS
+#include "common/ssl_context.h"
 
 void handle_return(std::string ret)
 {
@@ -22,18 +38,21 @@ void handle_return(std::string ret)
 }
 
 
-
-int main() {
-    rpc::client client("localhost", PORT);
+int main()
+{
     std::vector<std::string> queue = {""};
     std::string command = "";
     std::string result;
-    
-   // std::cout << "add(2, 3) = ";
-   // double five = c.call("add", 1999, 10).as<double>();
-   // std::cout << five << std::endl;
+    try
+    {
+        //We are using SSL to create a secure channel with the server. The certificate generation is done using OpenSSL,
+        // and the channel is created using the boost::asio SSL implementation
+        auto context = prepare_ssl_context("cert.pem", "key.pem", "dh.pem"); 
 
-     //our client has a CLI interface
+        //This function connects to our server through HTTP/HTTPS. I belive it should be similar to the naming.lookup from RMI
+        auto client = nanorpc::https::easy::make_client(std::move(context), "localhost", "55555", 8, "/api/");
+
+    //our client has a CLI interface
     while(command != "exit")
     {
 
@@ -116,5 +135,14 @@ int main() {
             std::cout << "unknown command" << std::endl;
         handle_return(result);
     }
-    return 0;
+
+
+    }
+    catch (std::exception const &e)
+    {
+        std::cerr << "Error: " << nanorpc::core::exception::to_string(e) << std::endl;
+        return EXIT_FAILURE;
+    }
+
+    return EXIT_SUCCESS;
 }

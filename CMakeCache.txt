@@ -212,6 +212,12 @@ CMAKE_STRIP:FILEPATH=/usr/bin/strip
 // Studio IDE projects all commands are done without /nologo.
 CMAKE_VERBOSE_MAKEFILE:BOOL=FALSE
 
+//Arguments to supply to pkg-config
+PKG_CONFIG_ARGN:STRING=
+
+//pkg-config executable
+PKG_CONFIG_EXECUTABLE:FILEPATH=/usr/bin/pkg-config
+
 //Default port used for running tests and examples
 RPCLIB_DEFAULT_PORT:STRING=55555
 
@@ -229,6 +235,9 @@ calculator_IS_TOP_LEVEL:STATIC=ON
 
 //Value Computed by CMake
 calculator_SOURCE_DIR:STATIC=/home/jslucena/RPCPrintServer
+
+//Path to a library.
+pkgcfg_lib_Cryptopp_crypto++:FILEPATH=/usr/lib/x86_64-linux-gnu/libcrypto++.so
 
 //Value Computed by CMake
 project_BINARY_DIR:STATIC=/home/jslucena/RPCPrintServer
@@ -389,10 +398,56 @@ CMAKE_STRIP-ADVANCED:INTERNAL=1
 CMAKE_UNAME:INTERNAL=/usr/bin/uname
 //ADVANCED property for variable: CMAKE_VERBOSE_MAKEFILE
 CMAKE_VERBOSE_MAKEFILE-ADVANCED:INTERNAL=1
+Cryptopp_CFLAGS:INTERNAL=
+Cryptopp_CFLAGS_I:INTERNAL=
+Cryptopp_CFLAGS_OTHER:INTERNAL=
+Cryptopp_FOUND:INTERNAL=1
+Cryptopp_INCLUDEDIR:INTERNAL=/usr/include
+Cryptopp_INCLUDE_DIRS:INTERNAL=
+Cryptopp_LDFLAGS:INTERNAL=-L/usr/lib/x86_64-linux-gnu/;-lcrypto++
+Cryptopp_LDFLAGS_OTHER:INTERNAL=
+Cryptopp_LIBDIR:INTERNAL=/usr/lib/x86_64-linux-gnu/
+Cryptopp_LIBRARIES:INTERNAL=crypto++
+Cryptopp_LIBRARY_DIRS:INTERNAL=/usr/lib/x86_64-linux-gnu/
+Cryptopp_LIBS:INTERNAL=
+Cryptopp_LIBS_L:INTERNAL=
+Cryptopp_LIBS_OTHER:INTERNAL=
+Cryptopp_LIBS_PATHS:INTERNAL=
+Cryptopp_MODULE_NAME:INTERNAL=libcrypto++
+Cryptopp_PREFIX:INTERNAL=/usr
+Cryptopp_STATIC_CFLAGS:INTERNAL=
+Cryptopp_STATIC_CFLAGS_I:INTERNAL=
+Cryptopp_STATIC_CFLAGS_OTHER:INTERNAL=
+Cryptopp_STATIC_INCLUDE_DIRS:INTERNAL=
+Cryptopp_STATIC_LDFLAGS:INTERNAL=-L/usr/lib/x86_64-linux-gnu/;-lcrypto++
+Cryptopp_STATIC_LDFLAGS_OTHER:INTERNAL=
+Cryptopp_STATIC_LIBDIR:INTERNAL=
+Cryptopp_STATIC_LIBRARIES:INTERNAL=crypto++
+Cryptopp_STATIC_LIBRARY_DIRS:INTERNAL=/usr/lib/x86_64-linux-gnu/
+Cryptopp_STATIC_LIBS:INTERNAL=
+Cryptopp_STATIC_LIBS_L:INTERNAL=
+Cryptopp_STATIC_LIBS_OTHER:INTERNAL=
+Cryptopp_STATIC_LIBS_PATHS:INTERNAL=
+Cryptopp_VERSION:INTERNAL=8.6
+Cryptopp_libcrypto++_INCLUDEDIR:INTERNAL=
+Cryptopp_libcrypto++_LIBDIR:INTERNAL=
+Cryptopp_libcrypto++_PREFIX:INTERNAL=
+Cryptopp_libcrypto++_VERSION:INTERNAL=
+//Details about finding PkgConfig
+FIND_PACKAGE_MESSAGE_DETAILS_PkgConfig:INTERNAL=[/usr/bin/pkg-config][v0.29.2()]
 //Details about finding Threads
 FIND_PACKAGE_MESSAGE_DETAILS_Threads:INTERNAL=[TRUE][v()]
 //Details about finding rpclib
 FIND_PACKAGE_MESSAGE_DETAILS_rpclib:INTERNAL=[/home/jslucena/rpclib/include][/home/jslucena/rpclib/librpc.a][v()]
+//ADVANCED property for variable: PKG_CONFIG_ARGN
+PKG_CONFIG_ARGN-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: PKG_CONFIG_EXECUTABLE
+PKG_CONFIG_EXECUTABLE-ADVANCED:INTERNAL=1
 //linker supports push/pop state
 _CMAKE_LINKER_PUSHPOP_STATE_SUPPORTED:INTERNAL=TRUE
+__pkg_config_arguments_Cryptopp:INTERNAL=REQUIRED;IMPORTED_TARGET;libcrypto++
+__pkg_config_checked_Cryptopp:INTERNAL=1
+//ADVANCED property for variable: pkgcfg_lib_Cryptopp_crypto++
+pkgcfg_lib_Cryptopp_crypto++-ADVANCED:INTERNAL=1
+prefix_result:INTERNAL=/usr/lib/x86_64-linux-gnu/
 

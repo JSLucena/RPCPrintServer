@@ -3,11 +3,13 @@ project(project)
 set(CMAKE_MODULE_PATH "/home/jslucena/rpclib/cmake")
 find_package(rpclib REQUIRED)
 find_package(Threads REQUIRED)
-
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(Cryptopp REQUIRED IMPORTED_TARGET libcrypto++)
 include_directories(${RPCLIB_INCLUDE_DIR})
 
 add_executable(server server.cc)
-target_link_libraries(server ${RPCLIB_LIBS} ${CMAKE_THREAD_LIBS_INIT})
+#target_link_libraries(server PUBLIC PkgConfig::Cryptopp)
+target_link_libraries(server PUBLIC ${RPCLIB_LIBS} ${CMAKE_THREAD_LIBS_INIT} PkgConfig::Cryptopp)
 set_target_properties(
         server
         PROPERTIES
