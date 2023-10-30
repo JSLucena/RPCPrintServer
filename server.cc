@@ -25,27 +25,20 @@ Also because of this, we didnt put too much attention on the client interface, i
 #include "rpc/server.h"
 #include "rpc/this_handler.h"
 
+//CRYPTO++
+#include "cryptopp/sha.h"
+#include "cryptopp/filters.h"
+#include "cryptopp/base64.h"
+#include "cryptopp/cryptlib.h"
 
 
 #define PORT 55555
 
-std::vector<std::string> split(std::string line)
-{
-    std::vector<std::string> words;
-    std::stringstream ss(line);
-    std::string word;
-    while (std::getline(ss, word, ' '))
-        words.push_back(word);
-
-    return words;
-  
-}
-//---------------------------------------------------------
-
 std::map<std::string, std::vector<std::string>> queueMap; //a dictionary to hold the queue for each printer
 std::map<std::string, std::string> statusMap; //dictionary to hold printer status
 std::map<std::string, std::string> configs; //dictionary to hold server settings
-std::map<std::string, std::string[2]> users;
+//std::map<std::string, std::string> users; //dictionary that holds authenticated sesion tokens
+std::vector<std::string> session_tokens;
 std::ofstream outfile;
 std::ifstream infile;
 
@@ -55,114 +48,240 @@ int jobID = 0;
 
 int salt;
 
-//print method, It prints on the console and adds to the printer queue
-std::string print(std::string filename, std::string printer)
+//==========================================================================
+std::vector<std::string> split(std::string line)
 {
-    if(running)
+    std::vector<std::string> words;
+    std::stringstream ss(line);
+    std::string word;
+    while (std::getline(ss, word, ' '))
     {
-        std::cout << "Printing " << filename << " on printer " << printer << std::endl;
-        std::string formatting = std::to_string(jobID++) + " " + filename + "\n"; //this is just formatting the string
-        queueMap[printer].push_back(formatting); //we store it in a vector
-        statusMap[printer] = "PRINTING"; //and set the printer to printing status
-        return "0"; 
+        words.push_back(word);
     }
-    return "-1"; //if the server is not running we return an error code
-                    
+        
+    return words;
+  
+}
+
+std::string SHA256HashString(std::string msg, std::string salt)
+{
+    std::string digest;
+   // CryptoPP::Base64Encoder encoder(new StringSink(digest));
+
+
+    CryptoPP::SHA256 hash;
+    hash.Update((const uint8_t*)msg.data(), msg.size());
+    hash.Update((const uint8_t*)salt.data(), salt.size());
+    digest.resize(hash.DigestSize());
+    hash.Final((uint8_t*)&digest[0]);
+
+   //d std::cout << "Message: " << msg << std::endl;
+    std::string encoded;
+    CryptoPP::StringSource(digest, true, new CryptoPP::Base64Encoder(new CryptoPP::StringSink(encoded)));
+    return encoded;
+}
+
+bool find_token(std::string token)
+{
+    for(auto i : session_tokens)
+    {
+        if(i == token)
+            return true;
+    }
+    return false;
+}
+//---------------------------------------------------------
+
+
+
+//print method, It prints on the console and adds to the printer queue
+std::string print(std::string filename, std::string printer, std::string token)
+{
+    if(find_token(token))
+    {
+        if(running)
+        {
+            std::cout << "Printing " << filename << " on printer " << printer << std::endl;
+            std::string formatting = std::to_string(jobID++) + " " + filename + "\n"; //this is just formatting the string
+            queueMap[printer].push_back(formatting); //we store it in a vector
+            statusMap[printer] = "PRINTING"; //and set the printer to printing status
+            return "0"; 
+        }
+        return "-1"; //if the server is not running we return an error code
+    }
+    return "-2";                
 }
 //sends the queue to the client machine, which prints on the clients CLI.
-std::string queue(std::string printer)
+std::string queue(std::string printer, std::string token)
 {
-    if(running)
+    if(find_token(token))
     {
-        std::cout << "Fetching queue " << printer <<std::endl;
-        std::string buffer = "";
-        for(int i = 0; i < queueMap[printer].size();i++)
-            buffer+= queueMap[printer][i]; //just contatenate all jobs
+        if(running)
+        {
+            std::cout << "Fetching queue " << printer <<std::endl;
+            std::string buffer = "";
+            for(int i = 0; i < queueMap[printer].size();i++)
+                buffer+= queueMap[printer][i]; //just contatenate all jobs
+            return buffer;
+        }
+        std::string buffer = "-1"; 
         return buffer;
     }
-    std::string buffer = "-1"; 
-    return buffer;
+    return "-2";
 
 }
 //puts job with the requested ID on top of the selected printer
- std::string topqueue(std::string printer, std::string id)
+ std::string topqueue(std::string printer, std::string id, std::string token)
 {
-    if(running)
-    {
-        for(int i = 0; i < queueMap[printer].size();i++)
+    if(find_token(token))
+    { 
+        if(running)
         {
-            //to change priority we find the job we need, insert a copy of it on the beginning and delete the old one
-            if(queueMap[printer][i].find(id) != -1)
+            for(int i = 0; i < queueMap[printer].size();i++)
             {
-                queueMap[printer].insert(queueMap[printer].begin(),queueMap[printer][i]);
-                queueMap[printer].erase(queueMap[printer].begin() + i+1);
-                std::cout << "Moved job to the order of queue" << std::endl;
-                return "0";
-            }
-            }
-        std::cout << "ID not found for topqueue" << std::endl;   
-        return "1";
+                //to change priority we find the job we need, insert a copy of it on the beginning and delete the old one
+                if(queueMap[printer][i].find(id) != -1)
+                {
+                    queueMap[printer].insert(queueMap[printer].begin(),queueMap[printer][i]);
+                    queueMap[printer].erase(queueMap[printer].begin() + i+1);
+                    std::cout << "Moved job to the order of queue" << std::endl;
+                    return "0";
+                }
+                }
+            std::cout << "ID not found for topqueue" << std::endl;   
+            return "1";
+        }
+        return "-1";
     }
-    return "-1";
+    return "-2";
 
 }
 
-std::string start()
+std::string start(std::string token)
 {
-    running = true;
-    std::cout << "Starting Print Server" << std::endl;
-    return "0";
+    if(find_token(token))
+    {
+        running = true;
+        std::cout << "Starting Print Server" << std::endl;
+        return "0";
+    }
+    return "-2";
 
 }
-std::string stop()
-{
-    running = false;
-    std::cout << "Stopping Print Server" << std::endl;
-    return "0";
+std::string stop(std::string token)
+{   if(find_token(token))
+    {
+        running = false;
+        std::cout << "Stopping Print Server" << std::endl;
+        return "0";
+    }
+    return "-2";
 }
 
-std::string restart()
+std::string restart(std::string token)
 {
-    running = true;
-                   
-    std::cout << "Restarting Print Server" << std::endl;
+    if(find_token(token))
+    {
+        running = true;
+                        
+        std::cout << "Restarting Print Server" << std::endl;
         for (auto i = queueMap.begin(); i != queueMap.end(); i++)
-        i->second.clear(); //clear job queue for each printer
-    return "0";
+            i->second.clear(); //clear job queue for each printer
+        for (auto i = statusMap.begin(); i != statusMap.end(); i++)
+            i->second = "IDLE"; //clear status queue for each printer
+        return "0";
+    }
+    return "-2";
 }
 //returns requested config printer status
-std::string status(std::string printer)
+std::string status(std::string printer, std::string token)
 {
-    if(running)
+    if(find_token(token))
     {
-        std::cout << "Status from " << printer << " requested" << std::endl;
-        return statusMap[printer];
+        if(running)
+        {
+            std::cout << "Status from " << printer << " requested" << std::endl;
+            return statusMap[printer];
+        }
+        return std::to_string(-1);
     }
-    return std::to_string(-1);
+    return "-2";
 }
 
 //returns requested config parameter value
-std::string readconfig(std::string parameter)
+std::string readconfig(std::string parameter, std::string token)
 {
-    if(running)
+    if(find_token(token))
     {
-        std::cout << "Config " << parameter << " requested" << std::endl;
-        return configs[parameter];
+        if(running)
+        {
+            std::cout << "Config " << parameter << " requested" << std::endl;
+            return configs[parameter];
+        }
+        return std::to_string(-1);
     }
-    return std::to_string(-1);
+    return "-2";
+    
 }
 //sets config parameter to new value
-std::string setconfig(std::string parameter, std::string value)
+std::string setconfig(std::string parameter, std::string value, std::string token)
 {
-    if(running)
+    if(find_token(token))
     {
-        std::cout << "Setting " << parameter << " from " << configs[parameter] << " to " << value << std::endl;
-        configs[parameter] = value;
-        return "0";
+        if(running)
+        {
+            std::cout << "Setting " << parameter << " from " << configs[parameter] << " to " << value << std::endl;
+            configs[parameter] = value;
+            return "0";
+        }
+        return "-1";
     }
-    return "-1";
+    return "-2";
 }
 
+std::string authenticate(std::string username, std::string password)
+{
+    std::string user,hash, given_hash;
+    std::cout << "Authentication Requested by " << username << std::endl;
+    infile.open("pass");
+    while (infile.good()) 
+    {
+        
+        infile >> user;
+        infile >> salt;
+        infile >> hash;
+        
+        if(user == username)
+        {
+            given_hash = SHA256HashString(password,std::to_string(salt));
+            given_hash.pop_back();
+            if(hash == given_hash)
+            {
+                infile.close();
+                int token = random();
+                std::string hashed_token;
+                hashed_token = SHA256HashString(std::to_string(token),std::to_string(token));
+                hashed_token.pop_back();
+                session_tokens.push_back(hashed_token);
+                return hashed_token;
+            }
+            else
+            {
+                infile.close();
+                return "2";
+            }
+        }
+   
+
+    }
+    infile.close();
+    return "2";
+}
+std::string remove_token(std::string token)
+{
+    session_tokens.erase(std::remove(session_tokens.begin(), session_tokens.end(), token), session_tokens.end());
+    return "0";
+}
 int main() {
     rpc::server srv(PORT);
 
@@ -181,6 +300,21 @@ int main() {
     configs["color"] = "uncolored";
     configs["orientation"] = "portrait";
 
+
+    std::string aux;
+    salt = random();
+    aux = SHA256HashString("admin",std::to_string(salt));
+    aux.pop_back(); //remove \n
+    outfile.open("pass");
+    outfile << "admin " << salt  << " " << aux << std::endl;
+
+    salt = random();
+    aux = SHA256HashString("12345",std::to_string(salt));
+    aux.pop_back(); //remove \n
+    outfile << "joca " << salt  << " " << aux << std::endl;
+
+    outfile.close();
+
     srv.bind("print", &print);
     srv.bind("queue", &queue);
     srv.bind("topqueue", &topqueue);
@@ -190,6 +324,8 @@ int main() {
     srv.bind("status", &status);
     srv.bind("readconfig", &readconfig);
     srv.bind("setconfig", &setconfig);
+    srv.bind("authenticate", &authenticate);
+    srv.bind("remove_token", &remove_token);
 
     srv.run();
 

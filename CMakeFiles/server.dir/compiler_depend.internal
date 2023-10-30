@@ -838,4 +838,52 @@ CMakeFiles/server.dir/server.cc.o
  /home/jslucena/rpclib/include/rpc/this_handler.h
  /home/jslucena/rpclib/include/rpc/detail/util.h
  /home/jslucena/rpclib/include/rpc/this_handler.inl
+ /usr/include/cryptopp/sha.h
+ /usr/include/cryptopp/config.h
+ /usr/include/cryptopp/config_align.h
+ /usr/include/cryptopp/config_asm.h
+ /usr/include/cryptopp/config_os.h
+ /usr/include/cryptopp/config_ver.h
+ /usr/include/cryptopp/config_cpu.h
+ /usr/include/cryptopp/config_cxx.h
+ /usr/include/cryptopp/config_dll.h
+ /usr/include/cryptopp/config_int.h
+ /usr/include/cryptopp/config_ns.h
+ /usr/include/cryptopp/config_misc.h
+ /usr/include/cryptopp/iterhash.h
+ /usr/include/cryptopp/cryptlib.h
+ /usr/include/cryptopp/stdcpp.h
+ /usr/include/c++/11/mutex
+ /usr/include/c++/11/chrono
+ /usr/include/c++/11/ratio
+ /usr/include/c++/11/bits/parse_numbers.h
+ /usr/include/c++/11/bits/std_mutex.h
+ /usr/include/c++/11/bits/unique_lock.h
+ /usr/include/c++/11/cmath
+ /usr/include/math.h
+ /usr/include/x86_64-linux-gnu/bits/math-vector.h
+ /usr/include/x86_64-linux-gnu/bits/libm-simd-decl-stubs.h
+ /usr/include/x86_64-linux-gnu/bits/flt-eval-method.h
+ /usr/include/x86_64-linux-gnu/bits/fp-logb.h
+ /usr/include/x86_64-linux-gnu/bits/fp-fast.h
+ /usr/include/x86_64-linux-gnu/bits/mathcalls-helper-functions.h
+ /usr/include/x86_64-linux-gnu/bits/mathcalls.h
+ /usr/include/x86_64-linux-gnu/bits/mathcalls-narrow.h
+ /usr/include/x86_64-linux-gnu/bits/iscanonical.h
+ /usr/include/cryptopp/trap.h
+ /usr/include/cryptopp/secblock.h
+ /usr/include/cryptopp/allocate.h
+ /usr/include/cryptopp/misc.h
+ /usr/include/cryptopp/secblockfwd.h
+ /usr/include/cryptopp/smartptr.h
+ /usr/include/cryptopp/simple.h
+ /usr/include/cryptopp/filters.h
+ /usr/include/cryptopp/queue.h
+ /usr/include/cryptopp/algparam.h
+ /usr/include/cryptopp/integer.h
+ /usr/include/cryptopp/base64.h
+ /usr/include/cryptopp/basecode.h
+ /usr/include/cryptopp/filters.h
+ /usr/include/cryptopp/argnames.h
+ /usr/include/cryptopp/cryptlib.h
 
