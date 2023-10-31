@@ -2,7 +2,7 @@
 Authentication Lab.
 Lecture : 02239 - Data Security Fall 23
 Author : Joaquim Siqueira Lucena
-Last Updated : 2023-10-26
+Last Updated : 2023-10-31
 
 For this project we are using a simple RPC implementation. It should function a bit similar to the Java RMI, I believe.
 
@@ -13,6 +13,17 @@ As the lab focuses on the authentication and password part, I am not putting foc
 and other checks. For example the print server does not check if the print exists, so if I put an unknown name it will crash(probably).
 Also because of this, we didnt put too much attention on the client interface, it is just a crude CLI.
 
+Used Libraries:
+
+RPClib
+Crypto++
+
+
+Return values:
+0 - success
+-1 - Server is not running
+-2 - Not authenticated
+1 - something went wrong
 ===================================================================
 */
 
@@ -37,8 +48,7 @@ Also because of this, we didnt put too much attention on the client interface, i
 std::map<std::string, std::vector<std::string>> queueMap; //a dictionary to hold the queue for each printer
 std::map<std::string, std::string> statusMap; //dictionary to hold printer status
 std::map<std::string, std::string> configs; //dictionary to hold server settings
-//std::map<std::string, std::string> users; //dictionary that holds authenticated sesion tokens
-std::vector<std::string> session_tokens;
+std::vector<std::string> session_tokens; //vector that holds all session tokens in use
 std::ofstream outfile;
 std::ifstream infile;
 
@@ -49,7 +59,7 @@ int jobID = 0;
 int salt;
 
 //==========================================================================
-std::vector<std::string> split(std::string line)
+std::vector<std::string> split(std::string line) //helper function to split a string on whitespaces
 {
     std::vector<std::string> words;
     std::stringstream ss(line);
@@ -63,25 +73,22 @@ std::vector<std::string> split(std::string line)
   
 }
 
+//IMPORTANT: Function that hashes our password using SHA2-256
 std::string SHA256HashString(std::string msg, std::string salt)
 {
     std::string digest;
-   // CryptoPP::Base64Encoder encoder(new StringSink(digest));
-
-
     CryptoPP::SHA256 hash;
-    hash.Update((const uint8_t*)msg.data(), msg.size());
-    hash.Update((const uint8_t*)salt.data(), salt.size());
+    hash.Update((const uint8_t*)msg.data(), msg.size()); //first we hash the password itself
+    hash.Update((const uint8_t*)salt.data(), salt.size()); //and then we hash the salt on top of it
     digest.resize(hash.DigestSize());
-    hash.Final((uint8_t*)&digest[0]);
+    hash.Final((uint8_t*)&digest[0]); //save it into our digest
 
-   //d std::cout << "Message: " << msg << std::endl;
     std::string encoded;
-    CryptoPP::StringSource(digest, true, new CryptoPP::Base64Encoder(new CryptoPP::StringSink(encoded)));
+    CryptoPP::StringSource(digest, true, new CryptoPP::Base64Encoder(new CryptoPP::StringSink(encoded))); //encode the digest using Base64 to save it later
     return encoded;
 }
 
-bool find_token(std::string token)
+bool find_token(std::string token) //helper function to find a token inside our session token list
 {
     for(auto i : session_tokens)
     {
@@ -97,7 +104,7 @@ bool find_token(std::string token)
 //print method, It prints on the console and adds to the printer queue
 std::string print(std::string filename, std::string printer, std::string token)
 {
-    if(find_token(token))
+    if(find_token(token)) //before doing anything we check if the token sent is the same as the one the server created
     {
         if(running)
         {
@@ -109,12 +116,12 @@ std::string print(std::string filename, std::string printer, std::string token)
         }
         return "-1"; //if the server is not running we return an error code
     }
-    return "-2";                
+    return "-2";  //if we are not authenticated               
 }
 //sends the queue to the client machine, which prints on the clients CLI.
 std::string queue(std::string printer, std::string token)
 {
-    if(find_token(token))
+    if(find_token(token)) //before doing anything we check if the token sent is the same as the one the server created
     {
         if(running)
         {
@@ -142,9 +149,9 @@ std::string queue(std::string printer, std::string token)
                 //to change priority we find the job we need, insert a copy of it on the beginning and delete the old one
                 if(queueMap[printer][i].find(id) != -1)
                 {
-                    queueMap[printer].insert(queueMap[printer].begin(),queueMap[printer][i]);
-                    queueMap[printer].erase(queueMap[printer].begin() + i+1);
-                    std::cout << "Moved job to the order of queue" << std::endl;
+                    queueMap[printer].insert(queueMap[printer].begin(),queueMap[printer][i]); //the copy
+                    queueMap[printer].erase(queueMap[printer].begin() + i+1); //removing old one
+                    std::cout << "Moved job to the top of queue" << std::endl;
                     return "0";
                 }
                 }
@@ -239,44 +246,49 @@ std::string setconfig(std::string parameter, std::string value, std::string toke
     return "-2";
 }
 
+//IMPORTANT, this function is the aunthentication function
 std::string authenticate(std::string username, std::string password)
 {
     std::string user,hash, given_hash;
     std::cout << "Authentication Requested by " << username << std::endl;
-    infile.open("pass");
-    while (infile.good()) 
+    infile.open("pass"); //this is the file that stores our users credentials
+    while (infile.good()) //while we are not at EOF
     {
-        
+        //our format is :user salt hash
+        //for each user
         infile >> user;
         infile >> salt;
         infile >> hash;
         
-        if(user == username)
+        if(user == username) //if we find the user trying to authenticate
         {
+            //we hash the typed password with the same hash used when adding the user to the system
             given_hash = SHA256HashString(password,std::to_string(salt));
-            given_hash.pop_back();
-            if(hash == given_hash)
+            given_hash.pop_back(); //this removes a /n that was being added at the end
+            if(hash == given_hash) //if they match means the combination user-password is correct
             {
                 infile.close();
-                int token = random();
+                int token = random(); //generate a random number
+                salt = random(); //generate a random salt
                 std::string hashed_token;
-                hashed_token = SHA256HashString(std::to_string(token),std::to_string(token));
-                hashed_token.pop_back();
-                session_tokens.push_back(hashed_token);
+                hashed_token = SHA256HashString(std::to_string(token),std::to_string(salt)); //hash both the token number and the new salt
+                hashed_token.pop_back(); //remove the /n from the resulting hash
+                session_tokens.push_back(hashed_token); //and add it to our session tokens, this hash is going to be our session token from now on
                 return hashed_token;
             }
             else
             {
                 infile.close();
-                return "2";
+                return "-2";
             }
         }
    
 
     }
     infile.close();
-    return "2";
+    return "-2";
 }
+//IMPORTANT, this function removes tokens when the user logs out
 std::string remove_token(std::string token)
 {
     session_tokens.erase(std::remove(session_tokens.begin(), session_tokens.end(), token), session_tokens.end());
@@ -286,7 +298,9 @@ int main() {
     rpc::server srv(PORT);
 
 
-    srand(0);
+    srand(0); //This is just for testing, our random seed is always the same
+
+    ///////////////////////////Population of Data for testing/////////////////
     queueMap["p1"];
     queueMap["p2"];
     queueMap["p3"];
@@ -314,7 +328,10 @@ int main() {
     outfile << "joca " << salt  << " " << aux << std::endl;
 
     outfile.close();
+    ///////////////////////////Population of Data for testing/////////////////
 
+
+    ////////Binding of functions that our server provides
     srv.bind("print", &print);
     srv.bind("queue", &queue);
     srv.bind("topqueue", &topqueue);

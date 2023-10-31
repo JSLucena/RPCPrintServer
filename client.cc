@@ -28,26 +28,34 @@ void handle_return(std::string ret)
 
 
 int main() {
-    rpc::client client("localhost", PORT);
+    rpc::client client("localhost", PORT);//create client and connect it to the server
     std::vector<std::string> queue = {""};
     std::string command = "";
     std::string result, username, password;
     std::string token;
-   // std::cout << "add(2, 3) = ";
-   // double five = c.call("add", 1999, 10).as<double>();
-   // std::cout << five << std::endl;
-
-     //our client has a CLI interface
 
     std::cout << "enter username: ";
     std::cin >> username;
     std::cout << "enter password: ";
     std::cin >> password;
+
+    //here we call the authentication function, the return is a token, or an error code if something went wrong
     result = client.call("authenticate",username,password).as<std::string>();
-    //handle_return(result);
+
     token = result;
     while(command != "exit")
     {
+
+        if(result == "-2") //if the authentication failed we try again
+        {
+            std::cout << "enter username: ";
+            std::cin >> username;
+            std::cout << "enter password: ";
+            std::cin >> password;
+            result = client.call("authenticate",username,password).as<std::string>();
+            token = result;
+        }
+
         std::cout << "$>";
         std::cin >> command; //here we get the command and depending on it we invoke different remote procedures
 
@@ -126,17 +134,10 @@ int main() {
         }
         else
             std::cout << "unknown command" << std::endl;
-        handle_return(result);
-        if(result == "-2")
-        {
-            std::cout << "enter username: ";
-            std::cin >> username;
-            std::cout << "enter password: ";
-            std::cin >> password;
-            result = client.call("authenticate",username,password).as<std::string>();
-            token = result;
-        }
+        handle_return(result); //this function handles the return values from all procedures
+        
     }
-    client.call("remove_token", token);
+    //at the end of the session we call the remove_token procedure to remove our session token from the server list
+    client.call("remove_token", token); 
     return 0;
 }
