@@ -1,3 +1,32 @@
+/*===================================================================
+Authentication Lab.
+Lecture : 02239 - Data Security Fall 23
+Author : Joaquim Siqueira Lucena
+Last Updated : 2023-10-31
+
+For this project we are using a simple RPC implementation. It should function a bit similar to the Java RMI, I believe.
+
+I decided to do it in C++ because I have no experience using Java, and my group members were not being very cooperative about the project
+so I ended up implementing alone. Because of this, I will do my best to explain my code in a way that makes it easy to understand.
+
+As the lab focuses on the authentication and password part, I am not putting focus on input sanitization
+and other checks. For example the print server does not check if the print exists, so if I put an unknown name it will crash(probably).
+Also because of this, we didnt put too much attention on the client interface, it is just a crude CLI.
+
+Used Libraries:
+
+RPClib
+Crypto++
+
+
+Return values:
+0 - success
+-1 - Server is not running
+-2 - Not authenticated
+1 - something went wrong
+===================================================================
+*/
+
 #include <cstdlib>
 #include <iostream>
 #include <vector>

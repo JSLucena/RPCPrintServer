@@ -59,7 +59,16 @@ int jobID = 0;
 int salt;
 
 //==========================================================================
-std::vector<std::string> split(std::string line) //helper function to split a string on whitespaces
+/*
+*string split(string line)
+*
+*@brief splits any string
+*@detail this function splits strings on whitespaces, and stores them on an STL vector.
+*@param A line with strings to split, in our case they come from our password file
+*@return vector containing all substrings
+*
+*/
+std::vector<std::string> split(std::string line)
 {
     std::vector<std::string> words;
     std::stringstream ss(line);
@@ -73,7 +82,16 @@ std::vector<std::string> split(std::string line) //helper function to split a st
   
 }
 
-//IMPORTANT: Function that hashes our password using SHA2-256
+/*
+*string SHA256HashString(string msg, string salt)
+*
+*@brief hashes a message+salt and returns it
+*@detail this function hashes a message using the specified salt and the SHA-256 cryptographic hash function
+*At the end we encode the digest with Base64 to store it in a file later
+*@param msg is our message to encrypt, salt is the salt we want to apply
+*@return string containing our hash encoded using Base64
+*
+*/
 std::string SHA256HashString(std::string msg, std::string salt)
 {
     std::string digest;
@@ -87,7 +105,15 @@ std::string SHA256HashString(std::string msg, std::string salt)
     CryptoPP::StringSource(digest, true, new CryptoPP::Base64Encoder(new CryptoPP::StringSink(encoded))); //encode the digest using Base64 to save it later
     return encoded;
 }
-
+/*
+*bool find_token(string token)
+*
+*@brief find token inside session_tokens vector
+*@detail this function iterates through the session_tokens vector to find received token exists
+*@param token is the token we received from our client
+*@return true if found, false if not
+*
+*/
 bool find_token(std::string token) //helper function to find a token inside our session token list
 {
     for(auto i : session_tokens)
@@ -101,7 +127,16 @@ bool find_token(std::string token) //helper function to find a token inside our 
 
 
 
-//print method, It prints on the console and adds to the printer queue
+/*
+*string print(string filename, string printer, string token)
+*
+*@brief queues requested file to print on requested printer
+*@detail this function first checks if the token the client sent is valid, if yes, a print job of filename
+*is queued on printer, adds an ID to the job, and the server sets the printer status to PRINTING
+*@param filename is the name of the file we want to print, printer is the name of the printer, token is the session token to verify authentication
+*@return 0 if success, -1 if server not running, -2 if not authenticated
+*
+*/
 std::string print(std::string filename, std::string printer, std::string token)
 {
     if(find_token(token)) //before doing anything we check if the token sent is the same as the one the server created
@@ -118,7 +153,17 @@ std::string print(std::string filename, std::string printer, std::string token)
     }
     return "-2";  //if we are not authenticated               
 }
-//sends the queue to the client machine, which prints on the clients CLI.
+
+/*
+*string queue(string printer, string token)
+*
+*@brief fetches and sends queue of requested printer to the client
+*@detail this function first checks if the token the client sent is valid, if yes, it appends
+*all jobs and their IDs inside printer queue and returns them to client
+*@param printer is the name of the printer, token is the session token to verify authentication
+*@return queue if success, -1 if server not running, -2 if not authenticated
+*
+*/
 std::string queue(std::string printer, std::string token)
 {
     if(find_token(token)) //before doing anything we check if the token sent is the same as the one the server created
@@ -137,7 +182,18 @@ std::string queue(std::string printer, std::string token)
     return "-2";
 
 }
-//puts job with the requested ID on top of the selected printer
+
+/*
+*string topqueue(string printer, string id,string token)
+*
+*@brief sends job with request id to the top of requested printer queue
+*@detail this function first checks if the token the client sent is valid, if yes, it finds
+*the job with id inside printer queue, inserts a copy of it on the beginning of the queue vector
+*and then removes the original from the queue
+*@param printer is the name of the printer, id is the id of the job we want to move,token is the session token to verify authentication
+*@return 0 if success, -1 if server not running, -2 if not authenticated, 1 if id not found
+*
+*/
  std::string topqueue(std::string printer, std::string id, std::string token)
 {
     if(find_token(token))
@@ -164,6 +220,16 @@ std::string queue(std::string printer, std::string token)
 
 }
 
+
+/*
+*string start(string token)
+*
+*@brief starts server
+*@detail this function first checks if the token the client sent is valid, if yes, it changes running to true
+*@param token is the session token to verify authentication
+*@return 0 if success, -2 if not authenticated
+*
+*/
 std::string start(std::string token)
 {
     if(find_token(token))
@@ -175,6 +241,16 @@ std::string start(std::string token)
     return "-2";
 
 }
+
+/*
+*string stop(string token)
+*
+*@brief starts server
+*@detail this function first checks if the token the client sent is valid, if yes, it changes running to false
+*@param token is the session token to verify authentication
+*@return 0 if success, -2 if not authenticated
+*
+*/
 std::string stop(std::string token)
 {   if(find_token(token))
     {
@@ -185,6 +261,16 @@ std::string stop(std::string token)
     return "-2";
 }
 
+/*
+*string restart(string token)
+*
+*@brief starts server
+*@detail this function first checks if the token the client sent is valid, if yes, it changes running to true,
+*clears the queue for each printer and resets the status for each printer
+*@param token is the session token to verify authentication
+*@return 0 if success, -2 if not authenticated
+*
+*/
 std::string restart(std::string token)
 {
     if(find_token(token))
@@ -200,7 +286,17 @@ std::string restart(std::string token)
     }
     return "-2";
 }
-//returns requested config printer status
+
+/*
+*string status(string printer, string token)
+*
+*@brief fetches requested printer status and sends it to client
+*@detail this function first checks if the token the client sent is valid, if yes,
+*it finds the printer status through a dictionary and sends it back to client
+*@param printer is the name of the requested printer, token is the session token to verify authentication
+*@return status if success, -1 if server not running, -2 if not authenticated
+*
+*/
 std::string status(std::string printer, std::string token)
 {
     if(find_token(token))
@@ -215,7 +311,16 @@ std::string status(std::string printer, std::string token)
     return "-2";
 }
 
-//returns requested config parameter value
+/*
+*string readconfig(string parameter, string token)
+*
+*@brief fetches requested server parameter and sends it to client
+*@detail this function first checks if the token the client sent is valid, if yes,
+*it finds the parameter through a dictionary and sends it back to client
+*@param parameter is the name of the requested server parameter, token is the session token to verify authentication
+*@return parameter if success, -1 if server not running, -2 if not authenticated
+*
+*/
 std::string readconfig(std::string parameter, std::string token)
 {
     if(find_token(token))
@@ -230,7 +335,17 @@ std::string readconfig(std::string parameter, std::string token)
     return "-2";
     
 }
-//sets config parameter to new value
+
+/*
+*string setconfig(string parameter, string value, string token)
+*
+*@brief sets parameter with new value from client
+*@detail this function first checks if the token the client sent is valid, if yes,
+*it finds the parameter through a dictionary and sets if to the new value
+*@param parameter is the name of the requested server parameter, value is the new value,token is the session token to verify authentication
+*@return 0 if success, -1 if server not running, -2 if not authenticated
+*
+*/
 std::string setconfig(std::string parameter, std::string value, std::string token)
 {
     if(find_token(token))
@@ -246,7 +361,18 @@ std::string setconfig(std::string parameter, std::string value, std::string toke
     return "-2";
 }
 
-//IMPORTANT, this function is the aunthentication function
+/*IMPORTANT
+*string authenticate(string username, string password)
+*
+*@brief authenticate client, generate token and send it back
+*@detail this function reads information from our password file(format for each user is: "user salt hash", one per line), 
+*if it finds the username wanting to authenticate, it calculates the hash of the received password, using the same salt used
+*on that user's account creation. If both match the server generates a random number and a new salt. It hashes the token,
+*adds it to the session_tokens list and sends it back to the client. The token is encoded using Base64
+*@param username is the username of the user that wants to connect, password is the password for that user's account
+*@return session token if success, -2 if the authentication failed(e.g. wrong password)
+*
+*/
 std::string authenticate(std::string username, std::string password)
 {
     std::string user,hash, given_hash;
@@ -288,7 +414,17 @@ std::string authenticate(std::string username, std::string password)
     infile.close();
     return "-2";
 }
-//IMPORTANT, this function removes tokens when the user logs out
+/*IMPORTANT
+*string remove_token(string token)
+*
+*@brief remove token from active session tokens list
+*@detail this function is called after the users call the exit CLI command, as they are closing the client,  
+*the server receives the session token used by them, finds and erases them from the session_tokens vector
+*This means that when the user initializes the client program the next time, they will have to authenticate again
+*@param token is the session token from the user calling the procedure
+*@return 0
+*
+*/
 std::string remove_token(std::string token)
 {
     session_tokens.erase(std::remove(session_tokens.begin(), session_tokens.end(), token), session_tokens.end());
