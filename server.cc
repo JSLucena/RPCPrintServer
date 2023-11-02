@@ -116,6 +116,7 @@ std::string SHA256HashString(std::string msg, std::string salt)
 */
 bool find_token(std::string token) //helper function to find a token inside our session token list
 {
+    std::cout << token << " ";
     for(auto i : session_tokens)
     {
         if(i == token)
