@@ -23,6 +23,7 @@ Return values:
 0 - success
 -1 - Server is not running
 -2 - Not authenticated
+-3 - No permission to execute requested service
 1 - something went wrong
 ===================================================================
 */
@@ -49,7 +50,9 @@ void handle_return(std::string ret)
     else if(ret == "2")
         std::cout << "Wrong username-password combination" << std::endl;
     else if(ret == "-2")
-        std::cout << "Authentication failed, please try again" << std::endl;
+        std::cout << "You are not authenticated" << std::endl;
+    else if(ret == "-3")
+        std::cout << "You do not have permission to access this service" << std::endl;
     else
         std::cout << ret << std::endl;
 }

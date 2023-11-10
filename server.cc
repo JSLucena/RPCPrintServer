@@ -23,6 +23,7 @@ Return values:
 0 - success
 -1 - Server is not running
 -2 - Not authenticated
+-3 - No permission to execute requested service
 1 - something went wrong
 ===================================================================
 */
@@ -32,6 +33,8 @@ Return values:
 #include <cstdlib>
 #include <vector>
 #include <fstream>
+#include <chrono>
+#include <ctime>
 
 #include "rpc/server.h"
 #include "rpc/this_handler.h"
@@ -48,7 +51,8 @@ Return values:
 std::map<std::string, std::vector<std::string>> queueMap; //a dictionary to hold the queue for each printer
 std::map<std::string, std::string> statusMap; //dictionary to hold printer status
 std::map<std::string, std::string> configs; //dictionary to hold server settings
-std::vector<std::string> session_tokens; //vector that holds all session tokens in use
+//std::vector<std::string> session_tokens; //vector that holds all session tokens in use
+std::map<std::string, std::string> session_tokens; //holds all session tokens in use
 std::ofstream outfile;
 std::ifstream infile;
 
@@ -59,6 +63,19 @@ int jobID = 0;
 int salt;
 
 //==========================================================================
+
+std::time_t get_timestamp()
+{
+    const auto p1 = std::chrono::system_clock::now();
+    return std::chrono::system_clock::to_time_t(p1);
+}
+std::string printable_timestamp()
+{
+    std::time_t t = get_timestamp();
+    std::string s = std::ctime(&t);
+    s.pop_back();
+    return s;
+}
 /*
 *string split(string line)
 *
@@ -105,24 +122,58 @@ std::string SHA256HashString(std::string msg, std::string salt)
     CryptoPP::StringSource(digest, true, new CryptoPP::Base64Encoder(new CryptoPP::StringSink(encoded))); //encode the digest using Base64 to save it later
     return encoded;
 }
+
+
+
+bool access_control(std::string token, char operation)
+{
+    std::string user, acl;
+    infile.open("permissionlist.acl"); //this is the file that stores our users credentials
+    while (infile.good()) //while we are not at EOF
+    {
+        //our format is :user salt hash
+        //for each user
+        infile >> user;
+        infile >> acl;
+        
+        if(user == session_tokens[token]) //if we find the user trying to authenticate
+        {
+            if(acl.find(operation) == -1)
+            {
+                infile.close();
+                return false;
+            }
+            infile.close();
+            return true;
+        }
+    }
+    infile.close();
+    return false;
+}
 /*
-*bool find_token(string token)
+*bool verify_permission(string token)
 *
-*@brief find token inside session_tokens vector
-*@detail this function iterates through the session_tokens vector to find received token exists
+*@brief find token inside session_tokens vector and later checks ACL permissions
+*@detail this function iterates through the session_tokens vector to find received token exists,
+*and if it exists we check is the user has access to that operation
 *@param token is the token we received from our client
-*@return true if found, false if not
+*@return true if found and user has access to that method, false if not
 *
 */
-bool find_token(std::string token) //helper function to find a token inside our session token list
+bool verify_permission(std::string token, char operation) //helper function to find a token inside our session token list
 {
-    std::cout << token << " ";
-    for(auto i : session_tokens)
+    
+    if (session_tokens.find(token) == session_tokens.end()) 
     {
-        if(i == token)
-            return true;
+        // not found
+        return false;
+    } else 
+    {
+        // found
+        
+        std::cout << printable_timestamp() << " "<<session_tokens[token] << " ";
+        return access_control(token, operation);
     }
-    return false;
 }
 //---------------------------------------------------------
 
@@ -140,7 +191,7 @@ bool find_token(std::string token) //helper function to find a token inside our 
 */
 std::string print(std::string filename, std::string printer, std::string token)
 {
-    if(find_token(token)) //before doing anything we check if the token sent is the same as the one the server created
+    if(verify_permission(token, 'p')) //before doing anything we check if the token sent is the same as the one the server created
     {
         if(running)
         {
@@ -152,6 +203,9 @@ std::string print(std::string filename, std::string printer, std::string token)
         }
         return "-1"; //if the server is not running we return an error code
     }
+    std::cout << "Unauthorized access on " << x << std::endl
+    if(!access_control(token, 'p'))
+        return "-3";
     return "-2";  //if we are not authenticated               
 }
 
@@ -167,7 +221,7 @@ std::string print(std::string filename, std::string printer, std::string token)
 */
 std::string queue(std::string printer, std::string token)
 {
-    if(find_token(token)) //before doing anything we check if the token sent is the same as the one the server created
+    if(verify_permission(token, 'q')) //before doing anything we check if the token sent is the same as the one the server created
     {
         if(running)
         {
@@ -180,6 +234,9 @@ std::string queue(std::string printer, std::string token)
         std::string buffer = "-1"; 
         return buffer;
     }
+    std::cout << "Unauthorized access on " << x << std::endl
+    if(!access_control(token, 'q'))
+        return "-3";
     return "-2";
 
 }
@@ -197,7 +254,7 @@ std::string queue(std::string printer, std::string token)
 */
  std::string topqueue(std::string printer, std::string id, std::string token)
 {
-    if(find_token(token))
+    if(verify_permission(token, 't'))
     { 
         if(running)
         {
@@ -217,6 +274,9 @@ std::string queue(std::string printer, std::string token)
         }
         return "-1";
     }
+    std::cout << "Unauthorized access on " << x << std::endl
+    if(!access_control(token, 't'))
+        return "-3";
     return "-2";
 
 }
@@ -233,12 +293,15 @@ std::string queue(std::string printer, std::string token)
 */
 std::string start(std::string token)
 {
-    if(find_token(token))
+    if(verify_permission(token, 's'))
     {
         running = true;
         std::cout << "Starting Print Server" << std::endl;
         return "0";
     }
+    std::cout << "Unauthorized access on " << x << std::endl
+    if(!access_control(token, 's'))
+        return "-3";
     return "-2";
 
 }
@@ -253,12 +316,15 @@ std::string start(std::string token)
 *
 */
 std::string stop(std::string token)
-{   if(find_token(token))
+{   if(verify_permission(token, 's'))
     {
         running = false;
         std::cout << "Stopping Print Server" << std::endl;
         return "0";
     }
+    std::cout << "Unauthorized access on " << x << std::endl
+    if(!access_control(token, 's'))
+        return "-3";
     return "-2";
 }
 
@@ -274,7 +340,7 @@ std::string stop(std::string token)
 */
 std::string restart(std::string token)
 {
-    if(find_token(token))
+    if(verify_permission(token, 'r'))
     {
         running = true;
                         
@@ -285,6 +351,9 @@ std::string restart(std::string token)
             i->second = "IDLE"; //clear status queue for each printer
         return "0";
     }
+    std::cout << "Unauthorized access on " << x << std::endl
+    if(!access_control(token, 'r'))
+        return "-3";
     return "-2";
 }
 
@@ -300,7 +369,7 @@ std::string restart(std::string token)
 */
 std::string status(std::string printer, std::string token)
 {
-    if(find_token(token))
+    if(verify_permission(token, 'c'))
     {
         if(running)
         {
@@ -309,6 +378,9 @@ std::string status(std::string printer, std::string token)
         }
         return std::to_string(-1);
     }
+    std::cout << "Unauthorized access on " << x << std::endl
+    if(!access_control(token, 'c'))
+        return "-3";
     return "-2";
 }
 
@@ -324,7 +396,7 @@ std::string status(std::string printer, std::string token)
 */
 std::string readconfig(std::string parameter, std::string token)
 {
-    if(find_token(token))
+    if(verify_permission(token, 'c'))
     {
         if(running)
         {
@@ -333,6 +405,9 @@ std::string readconfig(std::string parameter, std::string token)
         }
         return std::to_string(-1);
     }
+    std::cout << "Unauthorized access on " << x << std::endl
+    if(!access_control(token, 'c'))
+        return "-3";
     return "-2";
     
 }
@@ -349,7 +424,7 @@ std::string readconfig(std::string parameter, std::string token)
 */
 std::string setconfig(std::string parameter, std::string value, std::string token)
 {
-    if(find_token(token))
+    if(verify_permission(token, 'c'))
     {
         if(running)
         {
@@ -359,6 +434,9 @@ std::string setconfig(std::string parameter, std::string value, std::string toke
         }
         return "-1";
     }
+    std::cout << "Unauthorized access on " << x << std::endl
+    if(!access_control(token, 'c'))
+        return "-3";
     return "-2";
 }
 
@@ -377,7 +455,8 @@ std::string setconfig(std::string parameter, std::string value, std::string toke
 std::string authenticate(std::string username, std::string password)
 {
     std::string user,hash, given_hash;
-    std::cout << "Authentication Requested by " << username << std::endl;
+
+    std::cout << printable_timestamp() << " " << "Authentication Requested by " << username << std::endl;
     infile.open("pass"); //this is the file that stores our users credentials
     while (infile.good()) //while we are not at EOF
     {
@@ -400,7 +479,8 @@ std::string authenticate(std::string username, std::string password)
                 std::string hashed_token;
                 hashed_token = SHA256HashString(std::to_string(token),std::to_string(salt)); //hash both the token number and the new salt
                 hashed_token.pop_back(); //remove the /n from the resulting hash
-                session_tokens.push_back(hashed_token); //and add it to our session tokens, this hash is going to be our session token from now on
+                session_tokens[hashed_token] = username;
+               // session_tokens.push_back(hashed_token); //and add it to our session tokens, this hash is going to be our session token from now on
                 return hashed_token;
             }
             else
@@ -428,19 +508,21 @@ std::string authenticate(std::string username, std::string password)
 */
 std::string remove_token(std::string token)
 {
-    session_tokens.erase(std::remove(session_tokens.begin(), session_tokens.end(), token), session_tokens.end());
+    std::cout << printable_timestamp() << " " << "Session closed by " << session_tokens[token] << std::endl;
+    //session_tokens.erase(std::remove(session_tokens.begin(), session_tokens.end(), token), session_tokens.end());
+    session_tokens.erase(token);
     return "0";
 }
 int main() {
     rpc::server srv(PORT);
 
 
-    srand(0); //This is just for testing, our random seed is always the same
+    srand(0); //This is just for testing, our random seed is always the same for the results to be the same every time
 
     ///////////////////////////Population of Data for testing/////////////////
-    queueMap["p1"];
-    queueMap["p2"];
-    queueMap["p3"];
+    queueMap["printer1"];
+    queueMap["printer2"];
+    queueMap["printer3"];
 
     statusMap["p1"] = "IDLE";
     statusMap["p2"] = "IDLE";
@@ -457,13 +539,39 @@ int main() {
     aux = SHA256HashString("admin",std::to_string(salt));
     aux.pop_back(); //remove \n
     outfile.open("pass");
-    outfile << "admin " << salt  << " " << aux << std::endl;
+    outfile << "alice " << salt  << " " << aux << std::endl;
 
     salt = random();
     aux = SHA256HashString("12345",std::to_string(salt));
     aux.pop_back(); //remove \n
-    outfile << "joca " << salt  << " " << aux << std::endl;
+    outfile << "bob " << salt  << " " << aux << std::endl;
 
+    salt = random();
+    aux = SHA256HashString("cecilia99",std::to_string(salt));
+    aux.pop_back(); //remove \n
+    outfile << "cecilia " << salt  << " " << aux << std::endl;
+
+    salt = random();
+    aux = SHA256HashString("abcde",std::to_string(salt));
+    aux.pop_back(); //remove \n
+    outfile << "david " << salt  << " " << aux << std::endl;
+ 
+
+    salt = random();
+    aux = SHA256HashString("abcde",std::to_string(salt));
+    aux.pop_back(); //remove \n
+    outfile << "erica " << salt  << " " << aux << std::endl;
+
+
+    salt = random();
+    aux = SHA256HashString("freddy1337",std::to_string(salt));
+    aux.pop_back(); //remove \n
+    outfile << "fred " << salt  << " " << aux << std::endl;
+
+    salt = random();
+    aux = SHA256HashString("sionmain!",std::to_string(salt));
+    aux.pop_back(); //remove \n
+    outfile << "george " << salt  << " " << aux << std::endl;
     outfile.close();
     ///////////////////////////Population of Data for testing/////////////////
 
