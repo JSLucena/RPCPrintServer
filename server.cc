@@ -53,6 +53,7 @@ std::map<std::string, std::string> statusMap; //dictionary to hold printer statu
 std::map<std::string, std::string> configs; //dictionary to hold server settings
 //std::vector<std::string> session_tokens; //vector that holds all session tokens in use
 std::map<std::string, std::string> session_tokens; //holds all session tokens in use
+std::map<std::string, std::string> acl; //holds all access control policies
 std::ofstream outfile;
 std::ifstream infile;
 
@@ -75,6 +76,18 @@ std::string printable_timestamp()
     std::string s = std::ctime(&t);
     s.pop_back();
     return s;
+}
+
+void read_acl()
+{
+    std::string user, permissions;
+    infile.open("permissionlist.acl"); //this is the file that stores our users credentials
+    while (infile.good()) //while we are not at EOF
+    {
+        infile >> user;
+        infile >> permissions;
+        acl[user] = permissions;
+    }
 }
 /*
 *string split(string line)
@@ -127,28 +140,13 @@ std::string SHA256HashString(std::string msg, std::string salt)
 
 bool access_control(std::string token, char operation)
 {
-    std::string user, acl;
-    infile.open("permissionlist.acl"); //this is the file that stores our users credentials
-    while (infile.good()) //while we are not at EOF
+
+    if(acl[session_tokens[token]].find(operation) == -1)
     {
-        //our format is :user salt hash
-        //for each user
-        infile >> user;
-        infile >> acl;
-        
-        if(user == session_tokens[token]) //if we find the user trying to authenticate
-        {
-            if(acl.find(operation) == -1)
-            {
-                infile.close();
-                return false;
-            }
-            infile.close();
-            return true;
-        }
+        return false;
     }
-    infile.close();
-    return false;
+    return true;
+
 }
 /*
 *bool verify_permission(string token)
@@ -191,6 +189,7 @@ bool verify_permission(std::string token, char operation) //helper function to f
 */
 std::string print(std::string filename, std::string printer, std::string token)
 {
+    std::string x = "print";
     if(verify_permission(token, 'p')) //before doing anything we check if the token sent is the same as the one the server created
     {
         if(running)
@@ -203,7 +202,7 @@ std::string print(std::string filename, std::string printer, std::string token)
         }
         return "-1"; //if the server is not running we return an error code
     }
-    std::cout << "Unauthorized access on " << x << std::endl
+    std::cout << "Unauthorized access on " << x << std::endl;
     if(!access_control(token, 'p'))
         return "-3";
     return "-2";  //if we are not authenticated               
@@ -221,6 +220,7 @@ std::string print(std::string filename, std::string printer, std::string token)
 */
 std::string queue(std::string printer, std::string token)
 {
+    std::string x = "queue";
     if(verify_permission(token, 'q')) //before doing anything we check if the token sent is the same as the one the server created
     {
         if(running)
@@ -234,7 +234,7 @@ std::string queue(std::string printer, std::string token)
         std::string buffer = "-1"; 
         return buffer;
     }
-    std::cout << "Unauthorized access on " << x << std::endl
+    std::cout << "Unauthorized access on " << x << std::endl;
     if(!access_control(token, 'q'))
         return "-3";
     return "-2";
@@ -254,6 +254,7 @@ std::string queue(std::string printer, std::string token)
 */
  std::string topqueue(std::string printer, std::string id, std::string token)
 {
+    std::string x = "topqueue";
     if(verify_permission(token, 't'))
     { 
         if(running)
@@ -274,7 +275,7 @@ std::string queue(std::string printer, std::string token)
         }
         return "-1";
     }
-    std::cout << "Unauthorized access on " << x << std::endl
+    std::cout << "Unauthorized access on " << x << std::endl;
     if(!access_control(token, 't'))
         return "-3";
     return "-2";
@@ -293,13 +294,16 @@ std::string queue(std::string printer, std::string token)
 */
 std::string start(std::string token)
 {
+    std::string x = "start";
+    read_acl(); //we read the acl file when the server starts
     if(verify_permission(token, 's'))
     {
         running = true;
+        
         std::cout << "Starting Print Server" << std::endl;
         return "0";
     }
-    std::cout << "Unauthorized access on " << x << std::endl
+    std::cout << "Unauthorized access on " << x << std::endl;
     if(!access_control(token, 's'))
         return "-3";
     return "-2";
@@ -316,13 +320,15 @@ std::string start(std::string token)
 *
 */
 std::string stop(std::string token)
-{   if(verify_permission(token, 's'))
+{
+    std::string x = "stop"; 
+    if(verify_permission(token, 's'))
     {
         running = false;
         std::cout << "Stopping Print Server" << std::endl;
         return "0";
     }
-    std::cout << "Unauthorized access on " << x << std::endl
+    std::cout << "Unauthorized access on " << x << std::endl;
     if(!access_control(token, 's'))
         return "-3";
     return "-2";
@@ -340,10 +346,11 @@ std::string stop(std::string token)
 */
 std::string restart(std::string token)
 {
+    std::string x = "restart";
     if(verify_permission(token, 'r'))
     {
         running = true;
-                        
+        read_acl(); //reread acl file        
         std::cout << "Restarting Print Server" << std::endl;
         for (auto i = queueMap.begin(); i != queueMap.end(); i++)
             i->second.clear(); //clear job queue for each printer
@@ -351,7 +358,7 @@ std::string restart(std::string token)
             i->second = "IDLE"; //clear status queue for each printer
         return "0";
     }
-    std::cout << "Unauthorized access on " << x << std::endl
+    std::cout << "Unauthorized access on " << x << std::endl;
     if(!access_control(token, 'r'))
         return "-3";
     return "-2";
@@ -369,7 +376,8 @@ std::string restart(std::string token)
 */
 std::string status(std::string printer, std::string token)
 {
-    if(verify_permission(token, 'c'))
+    std::string x = "status";
+    if(verify_permission(token, 'x'))
     {
         if(running)
         {
@@ -378,8 +386,8 @@ std::string status(std::string printer, std::string token)
         }
         return std::to_string(-1);
     }
-    std::cout << "Unauthorized access on " << x << std::endl
-    if(!access_control(token, 'c'))
+    std::cout << "Unauthorized access on " << x << std::endl;
+    if(!access_control(token, 'x'))
         return "-3";
     return "-2";
 }
@@ -396,7 +404,8 @@ std::string status(std::string printer, std::string token)
 */
 std::string readconfig(std::string parameter, std::string token)
 {
-    if(verify_permission(token, 'c'))
+    std::string x = "readconfig";
+    if(verify_permission(token, 'v'))
     {
         if(running)
         {
@@ -405,8 +414,8 @@ std::string readconfig(std::string parameter, std::string token)
         }
         return std::to_string(-1);
     }
-    std::cout << "Unauthorized access on " << x << std::endl
-    if(!access_control(token, 'c'))
+    std::cout << "Unauthorized access on " << x << std::endl;
+    if(!access_control(token, 'v'))
         return "-3";
     return "-2";
     
@@ -424,6 +433,7 @@ std::string readconfig(std::string parameter, std::string token)
 */
 std::string setconfig(std::string parameter, std::string value, std::string token)
 {
+    std::string x = "setconfig";
     if(verify_permission(token, 'c'))
     {
         if(running)
@@ -434,7 +444,7 @@ std::string setconfig(std::string parameter, std::string value, std::string toke
         }
         return "-1";
     }
-    std::cout << "Unauthorized access on " << x << std::endl
+    std::cout << "Unauthorized access on " << x << std::endl;
     if(!access_control(token, 'c'))
         return "-3";
     return "-2";
