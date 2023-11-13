@@ -53,7 +53,7 @@ std::map<std::string, std::string> statusMap; //dictionary to hold printer statu
 std::map<std::string, std::string> configs; //dictionary to hold server settings
 //std::vector<std::string> session_tokens; //vector that holds all session tokens in use
 std::map<std::string, std::string> session_tokens; //holds all session tokens in use
-std::map<std::string, std::string> acl; //holds all access control policies
+std::map<std::string, std::string> acl, roles; //holds all access control policies and informations
 std::ofstream outfile;
 std::ifstream infile;
 
@@ -80,14 +80,26 @@ std::string printable_timestamp()
 
 void read_acl()
 {
-    std::string user, permissions;
+    std::string users, permissions, role;
     infile.open("permissionlist.acl"); //this is the file that stores our users credentials
     while (infile.good()) //while we are not at EOF
     {
-        infile >> user;
+        infile >> role;
         infile >> permissions;
-        acl[user] = permissions;
+        acl[role] = permissions;
     }
+    infile.close();
+
+    infile.open("identities"); //this is the file that stores our users credentials
+    while (infile.good()) //while we are not at EOF
+    {
+        infile >> role;
+        infile >> users;
+        roles[role] = users;
+    }
+    infile.close();
+
+
 }
 /*
 *string split(string line)
@@ -140,8 +152,18 @@ std::string SHA256HashString(std::string msg, std::string salt)
 
 bool access_control(std::string token, char operation)
 {
+    std::string role;
+    for(auto const& x : roles)
+    {
+       if(x.second.find(session_tokens[token]) != -1)
+       {
 
-    if(acl[session_tokens[token]].find(operation) == -1)
+            role = x.first;
+            break;
+       }
+    }
+
+    if(acl[role].find(operation) == -1)
     {
         return false;
     }
