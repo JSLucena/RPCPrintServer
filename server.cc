@@ -2,7 +2,7 @@
 Authentication Lab.
 Lecture : 02239 - Data Security Fall 23
 Author : Joaquim Siqueira Lucena
-Last Updated : 2023-10-31
+Last Updated : 2023-11-15
 
 For this project we are using a simple RPC implementation. It should function a bit similar to the Java RMI, I believe.
 
@@ -25,6 +25,26 @@ Return values:
 -2 - Not authenticated
 -3 - No permission to execute requested service
 1 - something went wrong
+
+Access Control Assignment:
+
+For the ACL version the permission list file has a simple format:
+user permissions
+user2 permissions
+....
+Permission codes are specified below:
+p - print
+q - queue
+t - topqueue
+r - restart
+s - start/stop
+c - setconfig
+v - readconfig
+x - getstatus
+- - empty
+
+For access control we load the file when the server starts or restarts, and the control is done by checking the token, to see to whom it pertains, 
+and searching the users permissions on the file.
 ===================================================================
 */
 
@@ -52,8 +72,8 @@ std::map<std::string, std::vector<std::string>> queueMap; //a dictionary to hold
 std::map<std::string, std::string> statusMap; //dictionary to hold printer status
 std::map<std::string, std::string> configs; //dictionary to hold server settings
 //std::vector<std::string> session_tokens; //vector that holds all session tokens in use
-std::map<std::string, std::string> session_tokens; //holds all session tokens in use
-std::map<std::string, std::string> acl; //holds all access control policies
+std::map<std::string, std::string> session_tokens; //map that holds tokens as keys, usernames as data
+std::map<std::string, std::string> acl; //hashmaps to store users-permissions
 std::ofstream outfile;
 std::ifstream infile;
 
@@ -64,12 +84,29 @@ int jobID = 0;
 int salt;
 
 //==========================================================================
-
+/*
+*time_t get_timestamp()
+*
+*@brief get current time
+*@detail this function gets the current server time to use it as a timestamp in logs.
+*@param 
+*@return time_t type
+*
+*/
 std::time_t get_timestamp()
 {
     const auto p1 = std::chrono::system_clock::now();
     return std::chrono::system_clock::to_time_t(p1);
 }
+/*
+*string printable_timestamp()
+*
+*@brief makes time_t printable
+*@detail this function summons get_timestamp() and transforms its output into a string for it to be printable.
+*@param 
+*@return string with timestamp
+*
+*/
 std::string printable_timestamp()
 {
     std::time_t t = get_timestamp();
@@ -78,6 +115,16 @@ std::string printable_timestamp()
     return s;
 }
 
+/*IMPORTANT
+*void read_acl()
+*
+*@brief reads the permission list file
+*@detail this function first reads the permissionlist.acl file and
+*It stores each pair in a hashmap where the key is the user, and the element are the permissions.
+*@param 
+*@return
+*
+*/
 void read_acl()
 {
     std::string user, permissions;
@@ -137,7 +184,16 @@ std::string SHA256HashString(std::string msg, std::string salt)
 }
 
 
-
+/*IMPORTANT
+*Bool access_control(string token, char operation)
+*
+*@brief returns true if user has access to service, false if not
+*@detail This function uses the token-user hashmap to find the user inside the users-permissions hashmap using the current session-token
+*After this, it check is the user has permission to access the services by looking for the requested character inside the permissions string.
+*@param token is the session token, operation represents our requested operation following the defined convention
+*@return true if access granted, false if access denied
+*
+*/
 bool access_control(std::string token, char operation)
 {
 
