@@ -2,7 +2,7 @@
 Authentication Lab.
 Lecture : 02239 - Data Security Fall 23
 Author : Joaquim Siqueira Lucena
-Last Updated : 2023-10-31
+Last Updated : 2023-11-15
 
 For this project we are using a simple RPC implementation. It should function a bit similar to the Java RMI, I believe.
 
@@ -25,6 +25,24 @@ Return values:
 -2 - Not authenticated
 -3 - No permission to execute requested service
 1 - something went wrong
+
+Access Control Assignment:
+
+For the RBAC version the permission list is very similar to the ACL version, however instead of individual users we have the roles specified.
+Permission codes are the same as the ACL:
+p - print
+q - queue
+t - topqueue
+r - restart
+s - start/stop
+c - setconfig
+v - readconfig
+x - getstatus
+- - empty
+
+In addition to this file we have an "identities" file, in which we map each user to its role. For access control we load both files when the server starts
+or restarts, and the control is done by checking the token, to see to whom it pertains, matching the user against its role, searching the permissions of the
+role, and finally deciding if the user can access it or not.
 ===================================================================
 */
 

@@ -2,7 +2,7 @@
 Authentication Lab.
 Lecture : 02239 - Data Security Fall 23
 Author : Joaquim Siqueira Lucena
-Last Updated : 2023-10-31
+Last Updated : 2023-11-15
 
 For this project we are using a simple RPC implementation. It should function a bit similar to the Java RMI, I believe.
 
@@ -25,6 +25,24 @@ Return values:
 -2 - Not authenticated
 -3 - No permission to execute requested service
 1 - something went wrong
+
+Access Control Assignment:
+
+For the RBAC version the permission list is very similar to the ACL version, however instead of individual users we have the roles specified.
+Permission codes are the same as the ACL:
+p - print
+q - queue
+t - topqueue
+r - restart
+s - start/stop
+c - setconfig
+v - readconfig
+x - getstatus
+- - empty
+
+In addition to this file we have an "identities" file, in which we map each user to its role. For access control we load both files when the server starts
+or restarts, and the control is done by checking the token, to see to whom it pertains, matching the user against its role, searching the permissions of the
+role, and finally deciding if the user can access it or not.
 ===================================================================
 */
 
@@ -52,8 +70,8 @@ std::map<std::string, std::vector<std::string>> queueMap; //a dictionary to hold
 std::map<std::string, std::string> statusMap; //dictionary to hold printer status
 std::map<std::string, std::string> configs; //dictionary to hold server settings
 //std::vector<std::string> session_tokens; //vector that holds all session tokens in use
-std::map<std::string, std::string> session_tokens; //holds all session tokens in use
-std::map<std::string, std::string> acl, roles; //holds all access control policies and informations
+std::map<std::string, std::string> session_tokens; //map that holds tokens as keys, usernames as data
+std::map<std::string, std::string> acl, roles; //hashmaps to store the roles-permissions and roles-users
 std::ofstream outfile;
 std::ifstream infile;
 
@@ -64,12 +82,29 @@ int jobID = 0;
 int salt;
 
 //==========================================================================
-
+/*
+*time_t get_timestamp()
+*
+*@brief get current time
+*@detail this function gets the current server time to use it as a timestamp in logs.
+*@param 
+*@return time_t type
+*
+*/
 std::time_t get_timestamp()
 {
     const auto p1 = std::chrono::system_clock::now();
     return std::chrono::system_clock::to_time_t(p1);
 }
+/*
+*string printable_timestamp()
+*
+*@brief makes time_t printable
+*@detail this function summons get_timestamp() and transforms its output into a string for it to be printable.
+*@param 
+*@return string with timestamp
+*
+*/
 std::string printable_timestamp()
 {
     std::time_t t = get_timestamp();
@@ -78,6 +113,20 @@ std::string printable_timestamp()
     return s;
 }
 
+/*IMPORTANT
+*void read_acl()
+*
+*@brief reads the permission list file and the identities file
+*@detail this function first reads the permissionlist.acl file, each line of it has a role and permissions
+*role1 permissions
+*role2 permissions
+*It stores each pair in a hashmap where the key is the role, and the element are the permissions.
+*After this, it reads the identities file, and performs similar operations. Everything is stored in another Hashmap
+*where roles are made into keys, and users are made into elements of each role.
+*@param 
+*@return
+*
+*/
 void read_acl()
 {
     std::string users, permissions, role;
@@ -149,7 +198,17 @@ std::string SHA256HashString(std::string msg, std::string salt)
 }
 
 
-
+/*IMPORTANT
+*Bool access_control(string token, char operation)
+*
+*@brief returns true if user has access to service, false if not
+*@detail This function uses the token-user hashmap to find the user inside the role-users hashmap using the current session-token
+*After it matches the user with the role, the function checks the roles-permission hashmap to find if the role has access to the
+*requested operation.
+*@param token is the session token, operation represents our requested operation following the defined convention
+*@return true if access granted, false if access denied
+*
+*/
 bool access_control(std::string token, char operation)
 {
     std::string role;
@@ -171,13 +230,13 @@ bool access_control(std::string token, char operation)
 
 }
 /*
-*bool verify_permission(string token)
+*bool verify_permission(string token, char operation)
 *
 *@brief find token inside session_tokens vector and later checks ACL permissions
 *@detail this function iterates through the session_tokens vector to find received token exists,
-*and if it exists we check is the user has access to that operation
-*@param token is the token we received from our client
-*@return true if found and user has access to that method, false if not
+*and if it exists we call the access control function to check if the user can access the service.
+*@param token is the token we received from our client, operation represents our requested operation following the defined convention
+*@return true if token is found and user has access to that method, false if not
 *
 */
 bool verify_permission(std::string token, char operation) //helper function to find a token inside our session token list
@@ -203,8 +262,8 @@ bool verify_permission(std::string token, char operation) //helper function to f
 *string print(string filename, string printer, string token)
 *
 *@brief queues requested file to print on requested printer
-*@detail this function first checks if the token the client sent is valid, if yes, a print job of filename
-*is queued on printer, adds an ID to the job, and the server sets the printer status to PRINTING
+*@detail this function first checks if the token the client sent is valid and if they have access to the service
+*, if yes, a print job of filename is queued on printer, adds an ID to the job, and the server sets the printer status to PRINTING
 *@param filename is the name of the file we want to print, printer is the name of the printer, token is the session token to verify authentication
 *@return 0 if success, -1 if server not running, -2 if not authenticated
 *
@@ -234,8 +293,8 @@ std::string print(std::string filename, std::string printer, std::string token)
 *string queue(string printer, string token)
 *
 *@brief fetches and sends queue of requested printer to the client
-*@detail this function first checks if the token the client sent is valid, if yes, it appends
-*all jobs and their IDs inside printer queue and returns them to client
+*@detail this function first checks if the token the client sent is valid and if they have access to the service
+*, if yes, it appends all jobs and their IDs inside printer queue and returns them to client
 *@param printer is the name of the printer, token is the session token to verify authentication
 *@return queue if success, -1 if server not running, -2 if not authenticated
 *
@@ -267,8 +326,8 @@ std::string queue(std::string printer, std::string token)
 *string topqueue(string printer, string id,string token)
 *
 *@brief sends job with request id to the top of requested printer queue
-*@detail this function first checks if the token the client sent is valid, if yes, it finds
-*the job with id inside printer queue, inserts a copy of it on the beginning of the queue vector
+*@detail this function first checks if the token the client sent is valid and if they have access to the service
+*, if yes, it finds the job with id inside printer queue, inserts a copy of it on the beginning of the queue vector
 *and then removes the original from the queue
 *@param printer is the name of the printer, id is the id of the job we want to move,token is the session token to verify authentication
 *@return 0 if success, -1 if server not running, -2 if not authenticated, 1 if id not found
@@ -309,7 +368,8 @@ std::string queue(std::string printer, std::string token)
 *string start(string token)
 *
 *@brief starts server
-*@detail this function first checks if the token the client sent is valid, if yes, it changes running to true
+*@detail this function first checks if the token the client sent is valid and if they have access to the service
+*, if yes, it changes running to true
 *@param token is the session token to verify authentication
 *@return 0 if success, -2 if not authenticated
 *
@@ -336,7 +396,8 @@ std::string start(std::string token)
 *string stop(string token)
 *
 *@brief starts server
-*@detail this function first checks if the token the client sent is valid, if yes, it changes running to false
+*@detail this function first checks if the token the client sent is valid and if they have access to the service
+*, if yes, it changes running to false
 *@param token is the session token to verify authentication
 *@return 0 if success, -2 if not authenticated
 *
@@ -360,7 +421,8 @@ std::string stop(std::string token)
 *string restart(string token)
 *
 *@brief starts server
-*@detail this function first checks if the token the client sent is valid, if yes, it changes running to true,
+*@detail this function first checks if the token the client sent is valid and if they have access to the service
+*, if yes, it changes running to true,
 *clears the queue for each printer and resets the status for each printer
 *@param token is the session token to verify authentication
 *@return 0 if success, -2 if not authenticated
@@ -390,8 +452,8 @@ std::string restart(std::string token)
 *string status(string printer, string token)
 *
 *@brief fetches requested printer status and sends it to client
-*@detail this function first checks if the token the client sent is valid, if yes,
-*it finds the printer status through a dictionary and sends it back to client
+*@detail this function first checks if the token the client sent is valid and if they have access to the service
+*, if yes, it finds the printer status through a dictionary and sends it back to client
 *@param printer is the name of the requested printer, token is the session token to verify authentication
 *@return status if success, -1 if server not running, -2 if not authenticated
 *
@@ -418,8 +480,8 @@ std::string status(std::string printer, std::string token)
 *string readconfig(string parameter, string token)
 *
 *@brief fetches requested server parameter and sends it to client
-*@detail this function first checks if the token the client sent is valid, if yes,
-*it finds the parameter through a dictionary and sends it back to client
+*@detail this function first checks if the token the client sent is valid and if they have access to the service
+*, if yes, it finds the parameter through a dictionary and sends it back to client
 *@param parameter is the name of the requested server parameter, token is the session token to verify authentication
 *@return parameter if success, -1 if server not running, -2 if not authenticated
 *
@@ -447,8 +509,8 @@ std::string readconfig(std::string parameter, std::string token)
 *string setconfig(string parameter, string value, string token)
 *
 *@brief sets parameter with new value from client
-*@detail this function first checks if the token the client sent is valid, if yes,
-*it finds the parameter through a dictionary and sets if to the new value
+*@detail this function first checks if the token the client sent is valid and if they have access to the service
+*, if yes, it finds the parameter through a dictionary and sets if to the new value
 *@param parameter is the name of the requested server parameter, value is the new value,token is the session token to verify authentication
 *@return 0 if success, -1 if server not running, -2 if not authenticated
 *
