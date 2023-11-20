@@ -1,4 +1,4 @@
-admin pqtrscvx
-technician srcvx
-poweruser pqtr
-user pq
+admin - pqtrscvx
+technician admin pqtr
+poweruser admin scvx
+user poweruser tr

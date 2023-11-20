@@ -53,6 +53,8 @@ role, and finally deciding if the user can access it or not.
 #include <fstream>
 #include <chrono>
 #include <ctime>
+#include <string_view>
+#include <algorithm>
 
 #include "rpc/server.h"
 #include "rpc/this_handler.h"
@@ -129,13 +131,26 @@ std::string printable_timestamp()
 */
 void read_acl()
 {
-    std::string users, permissions, role;
+    std::string users, permissions, role, inherit;
     infile.open("permissionlist.acl"); //this is the file that stores our users credentials
     while (infile.good()) //while we are not at EOF
     {
         infile >> role;
+        infile >> inherit;
         infile >> permissions;
-        acl[role] = permissions;
+        if(inherit == "-")
+            acl[role] = permissions;
+        else
+        {
+            std::string aux = acl[inherit];
+            for (auto &ch : permissions) 
+            {
+                aux.erase(std::remove(aux.begin(), aux.end(), ch), aux.end());
+
+            }
+            acl[role] = aux;
+        }
+            
     }
     infile.close();
 
