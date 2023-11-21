@@ -138,7 +138,7 @@ void read_acl()
         infile >> role;
         infile >> inherit;
         infile >> permissions;
-        if(inherit == "-")
+        if(inherit == "-") //if root
             acl[role] = permissions;
         else
         {
@@ -232,10 +232,10 @@ bool access_control(std::string token, char operation)
     {
 
         std::stringstream ss(x.second);
-        while (std::getline(ss, user, ',')) 
+        while (std::getline(ss, user, ',')) //we parse all usernames of each role here
         {
 
-            if(session_tokens[token] == user)
+            if(session_tokens[token] == user) //if we match everything is good to go
             {
 
                     role = x.first;
@@ -653,7 +653,7 @@ int main() {
     configs["color"] = "uncolored";
     configs["orientation"] = "portrait";
 
-
+/*
     std::string aux;
     salt = random();
     aux = SHA256HashString("admin",std::to_string(salt));
@@ -692,7 +692,18 @@ int main() {
     aux = SHA256HashString("sionmain!",std::to_string(salt));
     aux.pop_back(); //remove \n
     outfile << "george " << salt  << " " << aux << std::endl;
+
+    salt = random();
+    aux = SHA256HashString("testtest",std::to_string(salt));
+    aux.pop_back(); //remove \n
+    outfile << "henry " << salt  << " " << aux << std::endl;
+    
+    salt = random();
+    aux = SHA256HashString("password",std::to_string(salt));
+    aux.pop_back(); //remove \n
+    outfile << "ida " << salt  << " " << aux << std::endl;
     outfile.close();
+*/
     ///////////////////////////Population of Data for testing/////////////////
 
 
