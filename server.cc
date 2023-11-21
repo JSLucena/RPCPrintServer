@@ -226,15 +226,26 @@ std::string SHA256HashString(std::string msg, std::string salt)
 */
 bool access_control(std::string token, char operation)
 {
-    std::string role;
+    std::string role, user;
+    bool found;
     for(auto const& x : roles)
     {
-       if(x.second.find(session_tokens[token]) != -1)
-       {
 
-            role = x.first;
+        std::stringstream ss(x.second);
+        while (std::getline(ss, user, ',')) 
+        {
+
+            if(session_tokens[token] == user)
+            {
+
+                    role = x.first;
+                    found = true;
+                    break;
+            }
+            
+        }
+        if(found == true)
             break;
-       }
     }
 
     if(acl[role].find(operation) == -1)
