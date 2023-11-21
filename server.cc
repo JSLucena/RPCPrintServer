@@ -599,7 +599,7 @@ int main() {
     configs["color"] = "uncolored";
     configs["orientation"] = "portrait";
 
-
+/*
     std::string aux;
     salt = random();
     aux = SHA256HashString("admin",std::to_string(salt));
@@ -639,6 +639,7 @@ int main() {
     aux.pop_back(); //remove \n
     outfile << "george " << salt  << " " << aux << std::endl;
     outfile.close();
+    */
     ///////////////////////////Population of Data for testing/////////////////
 
 
